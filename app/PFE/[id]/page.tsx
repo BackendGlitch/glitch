@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { useParams, useRouter } from "next/navigation"
-import { ArrowLeft, FileText, Target, CheckCircle2, Calendar, Code, BookOpen, Workflow } from "lucide-react"
+import { ArrowLeft, FileText, Target, CheckCircle2, Calendar, Code, BookOpen, Workflow, Smartphone, Server } from "lucide-react"
 import { getProjectById, type PFEProject } from "@/lib/pfe-projects"
 import Navbar from "@/components/sections/Navbar"
 import Footer from "@/components/sections/Footer"
@@ -116,6 +116,255 @@ export default function PFEProjectPage() {
                 </div>
               </div>
             </section>
+
+            {/* Mobile Application & Central Booking Server Section - For PFE001 and PFE002 */}
+            {(project.id === "PFE001" || project.id === "PFE002") && (
+              <>
+                <section className={`p-8 md:p-10 border-4 ${colors.border} ${colors.bg} bg-zinc-900/30 rounded-sm`}>
+                  <h2 className={`text-3xl font-pixel ${colors.text} mb-6 flex items-center gap-3`}>
+                    <Smartphone className="h-7 w-7" />
+                    MOBILE APPLICATION
+                  </h2>
+                  <div className="space-y-6">
+                    <div>
+                      <h3 className={`text-xl font-pixel ${colors.text} mb-4`}>Overview</h3>
+                      {project.id === "PFE001" ? (
+                        <p className="text-lg md:text-xl leading-relaxed text-zinc-200 mb-4">
+                          The mobile application is a native or cross-platform mobile app developed for both iOS and Android platforms. 
+                          It provides users with a convenient way to browse available 3D printers, submit printing requests, track job progress, 
+                          and manage their orders directly from their smartphones.
+                        </p>
+                      ) : (
+                        <p className="text-lg md:text-xl leading-relaxed text-zinc-200 mb-4">
+                          The mobile application is a native or cross-platform mobile app developed for both iOS and Android platforms. 
+                          It enables customers to browse transport routes, check real-time seat availability across all Louaj stations, 
+                          book tickets, make secure payments, and receive digital tickets with QR codes directly on their smartphones.
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <h3 className={`text-xl font-pixel ${colors.text} mb-4`}>Key Features</h3>
+                      {project.id === "PFE001" ? (
+                        <ul className="space-y-3">
+                          <li className="flex items-start gap-4 text-lg md:text-xl leading-relaxed">
+                            <CheckCircle2 className={`h-6 w-6 ${colors.text} mt-1 flex-shrink-0`} />
+                            <span className="flex-1"><strong>Browse Printers:</strong> View available 3D printers with their specifications, capabilities, and current availability</span>
+                          </li>
+                          <li className="flex items-start gap-4 text-lg md:text-xl leading-relaxed">
+                            <CheckCircle2 className={`h-6 w-6 ${colors.text} mt-1 flex-shrink-0`} />
+                            <span className="flex-1"><strong>Submit Requests:</strong> Upload STL files, configure print parameters (quantity, scale, material), and submit printing requests</span>
+                          </li>
+                          <li className="flex items-start gap-4 text-lg md:text-xl leading-relaxed">
+                            <CheckCircle2 className={`h-6 w-6 ${colors.text} mt-1 flex-shrink-0`} />
+                            <span className="flex-1"><strong>Real-time Tracking:</strong> Monitor job status, progress percentage, and receive push notifications for status updates</span>
+                          </li>
+                          <li className="flex items-start gap-4 text-lg md:text-xl leading-relaxed">
+                            <CheckCircle2 className={`h-6 w-6 ${colors.text} mt-1 flex-shrink-0`} />
+                            <span className="flex-1"><strong>Payment Integration:</strong> Secure in-app payment processing using the Click payment gateway</span>
+                          </li>
+                          <li className="flex items-start gap-4 text-lg md:text-xl leading-relaxed">
+                            <CheckCircle2 className={`h-6 w-6 ${colors.text} mt-1 flex-shrink-0`} />
+                            <span className="flex-1"><strong>Order History:</strong> Access complete history of past orders, receipts, and download completed print files</span>
+                          </li>
+                          <li className="flex items-start gap-4 text-lg md:text-xl leading-relaxed">
+                            <CheckCircle2 className={`h-6 w-6 ${colors.text} mt-1 flex-shrink-0`} />
+                            <span className="flex-1"><strong>Offline Support:</strong> Queue requests when offline and sync when connection is restored</span>
+                          </li>
+                        </ul>
+                      ) : (
+                        <ul className="space-y-3">
+                          <li className="flex items-start gap-4 text-lg md:text-xl leading-relaxed">
+                            <CheckCircle2 className={`h-6 w-6 ${colors.text} mt-1 flex-shrink-0`} />
+                            <span className="flex-1"><strong>Route Browsing:</strong> Browse available transport routes between Louaj stations, view schedules, and check real-time seat availability</span>
+                          </li>
+                          <li className="flex items-start gap-4 text-lg md:text-xl leading-relaxed">
+                            <CheckCircle2 className={`h-6 w-6 ${colors.text} mt-1 flex-shrink-0`} />
+                            <span className="flex-1"><strong>Ticket Booking:</strong> Select departure and destination stations, choose date and time, select number of seats, and book tickets instantly</span>
+                          </li>
+                          <li className="flex items-start gap-4 text-lg md:text-xl leading-relaxed">
+                            <CheckCircle2 className={`h-6 w-6 ${colors.text} mt-1 flex-shrink-0`} />
+                            <span className="flex-1"><strong>Real-time Availability:</strong> View live seat availability across all stations, with instant updates when seats are booked or released</span>
+                          </li>
+                          <li className="flex items-start gap-4 text-lg md:text-xl leading-relaxed">
+                            <CheckCircle2 className={`h-6 w-6 ${colors.text} mt-1 flex-shrink-0`} />
+                            <span className="flex-1"><strong>Secure Payment:</strong> Process payments securely through integrated payment gateway, with support for multiple payment methods</span>
+                          </li>
+                          <li className="flex items-start gap-4 text-lg md:text-xl leading-relaxed">
+                            <CheckCircle2 className={`h-6 w-6 ${colors.text} mt-1 flex-shrink-0`} />
+                            <span className="flex-1"><strong>Digital Tickets:</strong> Receive digital tickets with QR codes immediately after booking, stored in the app for easy access</span>
+                          </li>
+                          <li className="flex items-start gap-4 text-lg md:text-xl leading-relaxed">
+                            <CheckCircle2 className={`h-6 w-6 ${colors.text} mt-1 flex-shrink-0`} />
+                            <span className="flex-1"><strong>Booking History:</strong> Access complete history of past bookings, view ticket details, and manage upcoming trips</span>
+                          </li>
+                          <li className="flex items-start gap-4 text-lg md:text-xl leading-relaxed">
+                            <CheckCircle2 className={`h-6 w-6 ${colors.text} mt-1 flex-shrink-0`} />
+                            <span className="flex-1"><strong>Push Notifications:</strong> Receive real-time notifications for booking confirmations, schedule changes, and trip reminders</span>
+                          </li>
+                        </ul>
+                      )}
+                    </div>
+                    <div>
+                      <h3 className={`text-xl font-pixel ${colors.text} mb-4`}>Technical Implementation</h3>
+                      {project.id === "PFE001" ? (
+                        <p className="text-lg md:text-xl leading-relaxed text-zinc-200 mb-4">
+                          The mobile app communicates with the central booking server via REST API for standard operations and WebSocket 
+                          for real-time updates. It uses secure authentication, local caching for offline support, and implements push 
+                          notifications for job status changes.
+                        </p>
+                      ) : (
+                        <p className="text-lg md:text-xl leading-relaxed text-zinc-200 mb-4">
+                          The mobile app communicates with the central booking server via REST API for booking operations and WebSocket 
+                          for real-time availability updates. It uses secure authentication, QR code generation for digital tickets, 
+                          push notifications for booking confirmations, and integrates seamlessly with existing Wasla station infrastructure 
+                          for ticket validation at physical stations.
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </section>
+
+                <section className={`p-8 md:p-10 border-4 ${colors.border} ${colors.bg} bg-zinc-900/30 rounded-sm`}>
+                  <h2 className={`text-3xl font-pixel ${colors.text} mb-6 flex items-center gap-3`}>
+                    <Server className="h-7 w-7" />
+                    CENTRAL BOOKING SERVER
+                  </h2>
+                  <div className="space-y-6">
+                    <div>
+                      <h3 className={`text-xl font-pixel ${colors.text} mb-4`}>Overview</h3>
+                      {project.id === "PFE001" ? (
+                        <p className="text-lg md:text-xl leading-relaxed text-zinc-200 mb-4">
+                          The central booking server is the core component of the system, acting as the single source of truth for all 
+                          booking requests, job scheduling, and coordination between multiple printer owners. It handles requests from 
+                          both mobile and web clients, manages the queue of print jobs, and ensures fair distribution of work across 
+                          available printers.
+                        </p>
+                      ) : (
+                        <p className="text-lg md:text-xl leading-relaxed text-zinc-200 mb-4">
+                          The central booking server is the core component of the Wasla network, acting as the coordination hub for all 
+                          ticket bookings across multiple Louaj transport stations. It handles booking requests from mobile and web clients, 
+                          manages real-time seat availability synchronization between all stations, processes payments, generates digital tickets, 
+                          and ensures seamless integration with existing Wasla desktop applications and station backends.
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <h3 className={`text-xl font-pixel ${colors.text} mb-4`}>Core Responsibilities</h3>
+                      {project.id === "PFE001" ? (
+                        <ul className="space-y-3">
+                          <li className="flex items-start gap-4 text-lg md:text-xl leading-relaxed">
+                            <CheckCircle2 className={`h-6 w-6 ${colors.text} mt-1 flex-shrink-0`} />
+                            <span className="flex-1"><strong>Request Management:</strong> Receive and validate booking requests from mobile and web clients</span>
+                          </li>
+                          <li className="flex items-start gap-4 text-lg md:text-xl leading-relaxed">
+                            <CheckCircle2 className={`h-6 w-6 ${colors.text} mt-1 flex-shrink-0`} />
+                            <span className="flex-1"><strong>Job Queue Management:</strong> Maintain a prioritized queue of print jobs and assign them to available printers based on compatibility, workload, and priority</span>
+                          </li>
+                          <li className="flex items-start gap-4 text-lg md:text-xl leading-relaxed">
+                            <CheckCircle2 className={`h-6 w-6 ${colors.text} mt-1 flex-shrink-0`} />
+                            <span className="flex-1"><strong>Printer Coordination:</strong> Coordinate between multiple printer owners, ensuring optimal job distribution and load balancing</span>
+                          </li>
+                          <li className="flex items-start gap-4 text-lg md:text-xl leading-relaxed">
+                            <CheckCircle2 className={`h-6 w-6 ${colors.text} mt-1 flex-shrink-0`} />
+                            <span className="flex-1"><strong>Real-time Synchronization:</strong> Broadcast status updates to all connected clients via WebSocket connections</span>
+                          </li>
+                          <li className="flex items-start gap-4 text-lg md:text-xl leading-relaxed">
+                            <CheckCircle2 className={`h-6 w-6 ${colors.text} mt-1 flex-shrink-0`} />
+                            <span className="flex-1"><strong>Payment Processing:</strong> Integrate with payment gateway, validate transactions, and update order status accordingly</span>
+                          </li>
+                          <li className="flex items-start gap-4 text-lg md:text-xl leading-relaxed">
+                            <CheckCircle2 className={`h-6 w-6 ${colors.text} mt-1 flex-shrink-0`} />
+                            <span className="flex-1"><strong>Data Persistence:</strong> Store all booking data, job history, and system state in PostgreSQL database with Redis caching for performance</span>
+                          </li>
+                        </ul>
+                      ) : (
+                        <ul className="space-y-3">
+                          <li className="flex items-start gap-4 text-lg md:text-xl leading-relaxed">
+                            <CheckCircle2 className={`h-6 w-6 ${colors.text} mt-1 flex-shrink-0`} />
+                            <span className="flex-1"><strong>Booking Management:</strong> Receive and validate ticket booking requests from mobile and web clients across all stations</span>
+                          </li>
+                          <li className="flex items-start gap-4 text-lg md:text-xl leading-relaxed">
+                            <CheckCircle2 className={`h-6 w-6 ${colors.text} mt-1 flex-shrink-0`} />
+                            <span className="flex-1"><strong>Real-time Availability Sync:</strong> Maintain real-time seat availability synchronization across all connected Louaj stations, ensuring accurate booking information</span>
+                          </li>
+                          <li className="flex items-start gap-4 text-lg md:text-xl leading-relaxed">
+                            <CheckCircle2 className={`h-6 w-6 ${colors.text} mt-1 flex-shrink-0`} />
+                            <span className="flex-1"><strong>Station Coordination:</strong> Coordinate bookings between multiple stations, handle inter-station transfers, and manage vehicle tracking</span>
+                          </li>
+                          <li className="flex items-start gap-4 text-lg md:text-xl leading-relaxed">
+                            <CheckCircle2 className={`h-6 w-6 ${colors.text} mt-1 flex-shrink-0`} />
+                            <span className="flex-1"><strong>Real-time Communication:</strong> Broadcast availability updates, booking confirmations, and schedule changes to all connected clients via WebSocket</span>
+                          </li>
+                          <li className="flex items-start gap-4 text-lg md:text-xl leading-relaxed">
+                            <CheckCircle2 className={`h-6 w-6 ${colors.text} mt-1 flex-shrink-0`} />
+                            <span className="flex-1"><strong>Payment Processing:</strong> Integrate with payment gateway, process secure transactions, and generate digital tickets upon successful payment</span>
+                          </li>
+                          <li className="flex items-start gap-4 text-lg md:text-xl leading-relaxed">
+                            <CheckCircle2 className={`h-6 w-6 ${colors.text} mt-1 flex-shrink-0`} />
+                            <span className="flex-1"><strong>Integration with Wasla Infrastructure:</strong> Seamlessly integrate with existing Wasla desktop applications, station backends, and AI systems for unified operations</span>
+                          </li>
+                          <li className="flex items-start gap-4 text-lg md:text-xl leading-relaxed">
+                            <CheckCircle2 className={`h-6 w-6 ${colors.text} mt-1 flex-shrink-0`} />
+                            <span className="flex-1"><strong>Data Persistence:</strong> Store all booking data, ticket information, and station state in PostgreSQL database with Redis caching for high-performance real-time operations</span>
+                          </li>
+                        </ul>
+                      )}
+                    </div>
+                    <div>
+                      <h3 className={`text-xl font-pixel ${colors.text} mb-4`}>Architecture Components</h3>
+                      <div className="space-y-4">
+                        <div>
+                          <h4 className={`text-lg font-pixel ${colors.text} mb-2`}>REST API</h4>
+                          <p className="text-lg leading-relaxed text-zinc-200">
+                            Provides standard HTTP endpoints for mobile and web clients to submit requests, query status, and manage orders. 
+                            Includes authentication, rate limiting, and request validation.
+                          </p>
+                        </div>
+                        <div>
+                          <h4 className={`text-lg font-pixel ${colors.text} mb-2`}>WebSocket Hub</h4>
+                          <p className="text-lg leading-relaxed text-zinc-200">
+                            Maintains persistent connections with all clients (mobile, web, printer clients) for real-time bidirectional 
+                            communication. Broadcasts job status updates, queue changes, and system notifications.
+                          </p>
+                        </div>
+                        <div>
+                          <h4 className={`text-lg font-pixel ${colors.text} mb-2`}>Job Scheduler</h4>
+                          <p className="text-lg leading-relaxed text-zinc-200">
+                            Intelligent scheduling algorithm that assigns jobs to printers based on printer capabilities, current workload, 
+                            job priority, and estimated completion time. Implements fair queuing and load balancing.
+                          </p>
+                        </div>
+                        <div>
+                          <h4 className={`text-lg font-pixel ${colors.text} mb-2`}>Pricing Engine</h4>
+                          <p className="text-lg leading-relaxed text-zinc-200">
+                            Calculates dynamic pricing based on file size, material consumption, print time, quantity, and printer 
+                            specifications. Provides price estimates before booking confirmation.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <h3 className={`text-xl font-pixel ${colors.text} mb-4`}>Scalability & Performance</h3>
+                      {project.id === "PFE001" ? (
+                        <p className="text-lg md:text-xl leading-relaxed text-zinc-200 mb-4">
+                          The central booking server is designed to handle high concurrent loads with horizontal scaling capabilities. 
+                          It uses Redis for caching frequently accessed data, implements connection pooling for database operations, 
+                          and supports multiple instances behind a load balancer for high availability.
+                        </p>
+                      ) : (
+                        <p className="text-lg md:text-xl leading-relaxed text-zinc-200 mb-4">
+                          The central booking server is designed to handle high concurrent booking loads from thousands of mobile users 
+                          across multiple stations simultaneously. It uses Redis for real-time availability caching, implements connection 
+                          pooling for database operations, supports horizontal scaling with multiple instances behind a load balancer, 
+                          and ensures 24/7 availability for critical transport operations. The system is optimized for low-latency 
+                          real-time synchronization to provide instant booking confirmations and availability updates.
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </section>
+              </>
+            )}
 
             {/* Objectives */}
             <section className={`p-8 md:p-10 border-4 ${colors.border} ${colors.bg} bg-zinc-900/30 rounded-sm`}>

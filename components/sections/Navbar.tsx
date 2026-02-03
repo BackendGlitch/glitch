@@ -20,17 +20,17 @@ export default function Navbar() {
     <nav className="fixed top-0 z-50 w-full border-b-4 border-cyan-400 bg-zinc-950/95 backdrop-blur-md">
       <div className="container mx-auto flex h-20 items-center justify-between px-4 md:px-8">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity group">
+        <Link href="/" className="flex items-center hover:opacity-80 transition-opacity group">
           <div className="relative">
             <Image
               src="/logo.png"
               alt="Glitch Logo"
-              width={40}
-              height={40}
-              className="h-10 w-10 group-hover:scale-110 transition-transform"
+              width={48}
+              height={48}
+              className="h-12 w-12 group-hover:scale-110 transition-transform"
+              priority
             />
           </div>
-          <span className="text-2xl font-pixel text-white">GLITCH</span>
         </Link>
 
         {/* Desktop Navigation */}

@@ -1,11 +1,75 @@
 "use client"
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Rocket, ArrowRight, CheckCircle2, Code, Zap, Target } from "lucide-react"
+import { Rocket, ArrowRight, CheckCircle2, Code, Zap, Target, ExternalLink, AlertCircle } from "lucide-react"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { useState } from "react"
 
 const capabilities = [
+  {
+    title: "BackendGlitch",
+    description: "A backend generator platform that creates fully deployed backends with API documentation in just a few clicks. Includes VPS hosting, code editing, and Git integration.",
+    tags: ["Backend Generator", "API Docs", "VPS Hosting", "Node.js", "DevOps"],
+    color: "cyan",
+    url: "http://app.backendglitch.com/",
+    status: "seeking-funding",
+    details: {
+      overview: "BackendGlitch is a revolutionary backend-as-a-service platform that allows developers to generate complete, production-ready backends with just a few clicks. The platform automatically deploys your backend, provides comprehensive API documentation, and includes VPS hosting infrastructure. Users can edit their backend code directly through the platform and manage everything through an intuitive dashboard.",
+      features: [
+        "Generate backends with a few clicks",
+        "Automatic deployment to secure cloud infrastructure",
+        "Comprehensive API documentation generation",
+        "Live code editing and management",
+        "VPS hosting included",
+        "Git integration for version control",
+        "Express.js middleware support",
+        "MongoDB database setup",
+        "Interactive playground for testing",
+        "Scalable infrastructure"
+      ],
+      techStack: ["Node.js", "Express.js", "MongoDB", "Next.js", "Docker", "VPS Infrastructure", "Git"],
+      useCases: [
+        "Rapid backend prototyping",
+        "MVP development",
+        "API-first applications",
+        "Startup backend infrastructure",
+        "Educational projects"
+      ],
+      statusInfo: "Currently available but not fully operational. Pushed for financial funding. Looking for founders, investors, and partners. Contact us if you're interested in investing or partnering."
+    }
+  },
+  {
+    title: "Wasla - Transport Station Management System",
+    description: "A comprehensive transport station management system for Louaj (Tunisian public transport) featuring real-time queue management, booking system, AI-powered barrier control, and network connectivity between multiple stations.",
+    tags: ["Go", "Electron", "React", "PostgreSQL", "Redis", "WebSocket", "AI"],
+    color: "green",
+    url: null,
+    status: "coming-soon",
+    details: {
+      overview: "Wasla is a complete transport station management system developed for STE Dhraiff Services Transport and Louaj stations across Tunisia. The system includes a central backend server, desktop applications for station personnel, AI-powered barrier control, self-service kiosks (Wasla Express), and a network platform connecting multiple stations in real-time.",
+      features: [
+        "Real-time queue management with drag-and-drop vehicle reordering",
+        "Automated booking and reservation system",
+        "AI-powered barrier control with license plate recognition",
+        "Self-service kiosks (Wasla Express) with QR code scanning",
+        "Network connectivity between multiple stations",
+        "Real-time synchronization via WebSocket",
+        "Desktop applications for operational staff and supervisors",
+        "Statistics and analytics dashboard",
+        "Automatic ticket printing",
+        "Vehicle tracking between stations"
+      ],
+      techStack: ["Go", "Electron", "React", "PostgreSQL", "Redis", "WebSocket", "YOLOv8", "PaddleOCR", "OpenCV", "Python"],
+      useCases: [
+        "Public transport station management",
+        "Multi-station network coordination",
+        "Automated access control",
+        "Real-time booking systems",
+        "Transport fleet management"
+      ],
+      statusInfo: "Project completed and deployed for multiple Louaj stations in Tunisia. Currently expanding to additional stations and developing mobile application for customer bookings."
+    }
+  },
   {
     title: "DeFi & Yield Platforms",
     description: "Building decentralized finance solutions with smart contracts, yield optimization, and automated trading strategies.",
@@ -209,12 +273,41 @@ export default function FeaturedProjects() {
                   className={`pixel-card ${colors.border} ${colors.bg} p-6 group cursor-pointer hover:scale-105 transition-transform`}
                 >
                   <div className="mb-4">
-                    <div className="inline-block mb-3 px-3 py-1 border-2 border-zinc-700 bg-zinc-900/50 pixel-text text-xs text-zinc-400">
-                      [{String(index + 1).padStart(2, "0")}]
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="inline-block px-3 py-1 border-2 border-zinc-700 bg-zinc-900/50 pixel-text text-xs text-zinc-400">
+                        [{String(index + 1).padStart(2, "0")}]
+                      </div>
+                      {capability.status === "seeking-funding" && (
+                        <div className="px-2 py-1 border-2 border-yellow-400 bg-yellow-400/10 pixel-text text-xs text-yellow-400 flex items-center gap-1">
+                          <AlertCircle className="h-3 w-3" />
+                          SEEKING FUNDING
+                        </div>
+                      )}
+                      {capability.status === "coming-soon" && (
+                        <div className="px-2 py-1 border-2 border-zinc-500 bg-zinc-800/50 pixel-text text-xs text-zinc-400 flex items-center gap-1">
+                          COMING SOON
+                        </div>
+                      )}
                     </div>
-                    <h3 className={`text-xl font-pixel ${colors.text} mb-3 leading-tight`}>
-                      {capability.title}
-                    </h3>
+                    <div className="flex items-center gap-2 mb-3">
+                      <h3 className={`text-xl font-pixel ${colors.text} leading-tight`}>
+                        {capability.title}
+                      </h3>
+                      {capability.url ? (
+                        <a
+                          href={capability.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          className="text-zinc-400 hover:text-cyan-400 transition-colors"
+                          aria-label="Visit project"
+                        >
+                          <ExternalLink className="h-4 w-4" />
+                        </a>
+                      ) : capability.status === "coming-soon" ? (
+                        <span className="text-zinc-500 text-xs font-pixel">[ COMING SOON ]</span>
+                      ) : null}
+                    </div>
                   </div>
                   <p className="text-zinc-300 mb-4 leading-relaxed font-mono text-sm">
                     {capability.description}
@@ -243,7 +336,7 @@ export default function FeaturedProjects() {
 
       <Dialog open={!!selectedCapability} onOpenChange={(open) => !open && setSelectedCapability(null)}>
         {selectedCapability && (
-          <DialogContent className={`border-4 ${colorClasses[selectedCapability.color as keyof typeof colorClasses].border} max-w-3xl`}>
+          <DialogContent className={`border-4 ${colorClasses[selectedCapability.color as keyof typeof colorClasses].border} max-w-5xl`}>
             <DialogHeader>
               <div className="flex items-center gap-3 mb-4">
                 <div className="inline-block px-3 py-1 border-2 border-zinc-700 bg-zinc-900/50 pixel-text text-xs text-zinc-400">
@@ -319,6 +412,42 @@ export default function FeaturedProjects() {
                   ))}
                 </div>
               </div>
+
+              {/* Status Info */}
+              {selectedCapability.status && selectedCapability.details.statusInfo && (
+                <div className={`p-4 border-4 ${
+                  selectedCapability.status === "seeking-funding" 
+                    ? "border-yellow-400 bg-yellow-400/10" 
+                    : "border-zinc-500 bg-zinc-800/50"
+                } rounded-sm`}>
+                  <h4 className={`text-lg font-pixel ${
+                    selectedCapability.status === "seeking-funding" 
+                      ? "text-yellow-400" 
+                      : "text-zinc-400"
+                  } mb-3 flex items-center gap-2`}>
+                    <AlertCircle className="h-5 w-5" />
+                    PROJECT STATUS
+                  </h4>
+                  <p className="text-sm text-zinc-300 font-mono leading-relaxed">
+                    {selectedCapability.details.statusInfo}
+                  </p>
+                  {selectedCapability.url && (
+                    <a
+                      href={selectedCapability.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`inline-flex items-center gap-2 mt-4 px-4 py-2 border-2 ${
+                        selectedCapability.status === "seeking-funding"
+                          ? "border-yellow-400 bg-yellow-400/20 text-yellow-400 hover:bg-yellow-400/30"
+                          : "border-cyan-400 bg-cyan-400/20 text-cyan-400 hover:bg-cyan-400/30"
+                      } transition-all font-pixel text-sm`}
+                    >
+                      <ExternalLink className="h-4 w-4" />
+                      [ VISIT PROJECT ]
+                    </a>
+                  )}
+                </div>
+              )}
             </div>
           </DialogContent>
         )}
