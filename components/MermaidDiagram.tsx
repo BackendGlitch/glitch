@@ -16,6 +16,8 @@ export default function MermaidDiagram({ chart }: MermaidDiagramProps) {
   const [position, setPosition] = useState({ x: 0, y: 0 })
   const [isDragging, setIsDragging] = useState(false)
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 })
+  const [touchStart, setTouchStart] = useState<{ x: number; y: number; distance: number } | null>(null)
+  const [initialScale, setInitialScale] = useState(1)
 
   useEffect(() => {
     if (!mermaidRef.current || typeof window === "undefined") return
@@ -91,7 +93,7 @@ export default function MermaidDiagram({ chart }: MermaidDiagramProps) {
     setPosition({ x: 0, y: 0 })
   }
 
-  // Drag functionality
+  // Drag functionality (mouse)
   const handleMouseDown = (e: React.MouseEvent) => {
     if (e.button !== 0) return // Only left mouse button
     setIsDragging(true)
@@ -113,6 +115,68 @@ export default function MermaidDiagram({ chart }: MermaidDiagramProps) {
     setIsDragging(false)
   }
 
+  // Touch functionality
+  const getTouchDistance = (touches: React.TouchList): number => {
+    if (touches.length < 2) return 0
+    const touch1 = touches[0]
+    const touch2 = touches[1]
+    return Math.hypot(touch2.clientX - touch1.clientX, touch2.clientY - touch1.clientY)
+  }
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    e.preventDefault()
+    if (e.touches.length === 1) {
+      // Single touch - panning
+      setIsDragging(true)
+      setDragStart({
+        x: e.touches[0].clientX - position.x,
+        y: e.touches[0].clientY - position.y,
+      })
+    } else if (e.touches.length === 2) {
+      // Two touches - pinch to zoom
+      const distance = getTouchDistance(e.touches)
+      setTouchStart({
+        x: (e.touches[0].clientX + e.touches[1].clientX) / 2,
+        y: (e.touches[0].clientY + e.touches[1].clientY) / 2,
+        distance,
+      })
+      setInitialScale(scale)
+    }
+  }
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    e.preventDefault()
+    if (e.touches.length === 1 && isDragging) {
+      // Single touch - panning
+      setPosition({
+        x: e.touches[0].clientX - dragStart.x,
+        y: e.touches[0].clientY - dragStart.y,
+      })
+    } else if (e.touches.length === 2 && touchStart) {
+      // Two touches - pinch to zoom
+      const distance = getTouchDistance(e.touches)
+      const scaleChange = distance / touchStart.distance
+      const newScale = Math.max(0.5, Math.min(3, initialScale * scaleChange))
+      setScale(newScale)
+    }
+  }
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    e.preventDefault()
+    if (e.touches.length === 0) {
+      setIsDragging(false)
+      setTouchStart(null)
+    } else if (e.touches.length === 1) {
+      // Switch from pinch to pan
+      setTouchStart(null)
+      setIsDragging(true)
+      setDragStart({
+        x: e.touches[0].clientX - position.x,
+        y: e.touches[0].clientY - position.y,
+      })
+    }
+  }
+
   if (error) {
     return (
       <div className="p-8 border-2 border-red-400 bg-red-400/10 text-center rounded-sm">
@@ -129,31 +193,31 @@ export default function MermaidDiagram({ chart }: MermaidDiagramProps) {
 
   return (
     <div className="w-full relative">
-      {/* Zoom Controls */}
-      <div className="absolute top-4 right-4 z-10 flex flex-col gap-2">
+      {/* Zoom Controls - Larger on mobile */}
+      <div className="absolute top-2 right-2 sm:top-4 sm:right-4 z-10 flex flex-col gap-2 sm:gap-2">
         <button
           onClick={handleZoomIn}
-          className="p-2 bg-zinc-900/90 border-2 border-cyan-400 text-cyan-400 hover:bg-cyan-400/10 transition-all"
+          className="p-3 sm:p-2 bg-zinc-900/95 border-2 border-cyan-400 text-cyan-400 hover:bg-cyan-400/10 active:bg-cyan-400/20 transition-all touch-manipulation min-w-[48px] min-h-[48px] sm:min-w-0 sm:min-h-0 flex items-center justify-center"
           aria-label="Zoom in"
           title="Zoom in"
         >
-          <ZoomIn className="h-4 w-4" />
+          <ZoomIn className="h-5 w-5 sm:h-4 sm:w-4" />
         </button>
         <button
           onClick={handleZoomOut}
-          className="p-2 bg-zinc-900/90 border-2 border-cyan-400 text-cyan-400 hover:bg-cyan-400/10 transition-all"
+          className="p-3 sm:p-2 bg-zinc-900/95 border-2 border-cyan-400 text-cyan-400 hover:bg-cyan-400/10 active:bg-cyan-400/20 transition-all touch-manipulation min-w-[48px] min-h-[48px] sm:min-w-0 sm:min-h-0 flex items-center justify-center"
           aria-label="Zoom out"
           title="Zoom out"
         >
-          <ZoomOut className="h-4 w-4" />
+          <ZoomOut className="h-5 w-5 sm:h-4 sm:w-4" />
         </button>
         <button
           onClick={handleReset}
-          className="p-2 bg-zinc-900/90 border-2 border-cyan-400 text-cyan-400 hover:bg-cyan-400/10 transition-all"
+          className="p-3 sm:p-2 bg-zinc-900/95 border-2 border-cyan-400 text-cyan-400 hover:bg-cyan-400/10 active:bg-cyan-400/20 transition-all touch-manipulation min-w-[48px] min-h-[48px] sm:min-w-0 sm:min-h-0 flex items-center justify-center"
           aria-label="Reset zoom"
           title="Reset zoom"
         >
-          <RotateCcw className="h-4 w-4" />
+          <RotateCcw className="h-5 w-5 sm:h-4 sm:w-4" />
         </button>
       </div>
 
@@ -165,11 +229,14 @@ export default function MermaidDiagram({ chart }: MermaidDiagramProps) {
 
       <div
         ref={containerRef}
-        className="relative w-full overflow-hidden border-2 border-zinc-700 rounded-sm bg-zinc-950 min-h-[400px] cursor-move"
+        className="relative w-full overflow-hidden border-2 border-zinc-700 rounded-sm bg-zinc-950 min-h-[300px] sm:min-h-[400px] cursor-move touch-none select-none"
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
       >
         <div
           ref={mermaidRef}
@@ -183,8 +250,12 @@ export default function MermaidDiagram({ chart }: MermaidDiagramProps) {
       </div>
 
       {/* Zoom indicator */}
-      <div className="mt-2 text-xs text-zinc-400 font-mono text-center">
-        Zoom: {Math.round(scale * 100)}% {scale !== 1 && "• Click and drag to pan"}
+      <div className="mt-2 text-xs sm:text-sm text-zinc-400 font-mono text-center px-2">
+        Zoom: {Math.round(scale * 100)}% 
+        {scale !== 1 && (
+          <span className="hidden sm:inline"> • Click and drag to pan</span>
+        )}
+        <span className="sm:hidden"> • Pinch to zoom, drag to pan</span>
       </div>
     </div>
   )

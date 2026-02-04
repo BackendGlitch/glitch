@@ -77,18 +77,18 @@ export default function Contact() {
   return (
     <section id="contact" className="py-24 bg-gradient-to-b from-zinc-950 to-pink-950/20 border-t-4 border-pink-400">
       <div className="container mx-auto px-4 md:px-8">
-        <div className="mb-12 text-center">
-          <div className="inline-block mb-6 px-6 py-3 bg-pink-400/20 border-4 border-pink-400 pixel-text text-pink-400 text-xs">
+        <div className="mb-12 text-center px-4">
+          <div className="inline-block mb-6 px-4 sm:px-6 py-3 bg-pink-400/20 border-4 border-pink-400 pixel-text text-pink-400 text-xs">
             [ CONTACT ]
           </div>
-          <h2 className="text-5xl md:text-7xl font-pixel text-white mb-4 tracking-wider">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-pixel text-white mb-4 tracking-wider break-words px-2">
             GET IN TOUCH
           </h2>
-          <p className="text-xl text-zinc-300 max-w-2xl mx-auto font-mono">
+          <p className="text-base sm:text-lg md:text-xl text-zinc-300 max-w-2xl mx-auto font-mono px-2">
             We're a new startup and we'd love to hear from you. Let's build something amazing together.
           </p>
         </div>
-        <div className="grid gap-12 md:grid-cols-2 max-w-5xl mx-auto">
+        <div className="grid grid-cols-1 gap-12 md:grid-cols-2 max-w-5xl mx-auto">
           <div>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>

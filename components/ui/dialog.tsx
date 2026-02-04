@@ -38,7 +38,15 @@ const DialogContent = React.forwardRef<
     <DialogPrimitive.Content
       ref={ref}
       className={cn(
-        "fixed left-[50%] top-[50%] z-50 grid w-full max-w-4xl max-h-[90vh] translate-x-[-50%] translate-y-[-50%] gap-4 border-4 border-cyan-400 bg-zinc-950 p-8 shadow-lg duration-200 overflow-y-auto data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]",
+        "fixed z-50 grid w-full gap-4 border-4 border-cyan-400 bg-zinc-950 shadow-lg duration-200 overflow-y-auto",
+        // Mobile: full screen
+        "inset-0 max-h-screen p-4 sm:p-6 md:p-8",
+        // Desktop: centered modal
+        "md:left-[50%] md:top-[50%] md:max-w-4xl md:max-h-[90vh] md:translate-x-[-50%] md:translate-y-[-50%]",
+        // Animations
+        "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+        "data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
+        "md:data-[state=closed]:slide-out-to-left-1/2 md:data-[state=closed]:slide-out-to-top-[48%] md:data-[state=open]:slide-in-from-left-1/2 md:data-[state=open]:slide-in-from-top-[48%]",
         className
       )}
       {...props}
@@ -88,7 +96,7 @@ const DialogTitle = React.forwardRef<
   <DialogPrimitive.Title
     ref={ref}
     className={cn(
-      "text-3xl font-pixel leading-none tracking-wider",
+      "text-xl sm:text-2xl md:text-3xl font-pixel leading-tight tracking-wider break-words",
       className
     )}
     {...props}

@@ -174,7 +174,7 @@ export default function Hero() {
           </div>
 
           {/* Quick Stats - Bottom Section */}
-          <div className="grid grid-cols-3 gap-6 pt-12 mt-12 border-t-4 border-zinc-800 max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-12 mt-12 border-t-4 border-zinc-800 max-w-4xl mx-auto">
             <div className="pixel-card border-cyan-400 bg-cyan-400/10 p-6 text-center">
               <div className="text-3xl md:text-4xl font-pixel text-cyan-400 mb-2">2024</div>
               <div className="text-xs font-pixel text-zinc-400">FOUNDED</div>

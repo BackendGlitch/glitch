@@ -165,14 +165,14 @@ export default function Services() {
     <>
       <section id="services" className="py-24 bg-zinc-950 border-t-4 border-cyan-400">
         <div className="container mx-auto px-4 md:px-8">
-          <div className="mb-16 text-center">
-            <div className="inline-block mb-6 px-6 py-3 bg-cyan-400/20 border-4 border-cyan-400 pixel-text text-cyan-400 text-xs">
+          <div className="mb-16 text-center px-4">
+            <div className="inline-block mb-6 px-4 sm:px-6 py-3 bg-cyan-400/20 border-4 border-cyan-400 pixel-text text-cyan-400 text-xs">
               [ SERVICES ]
             </div>
-            <h2 className="text-5xl md:text-7xl font-pixel text-white mb-6 tracking-wider">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-pixel text-white mb-6 tracking-wider break-words px-2">
               WHAT WE DO
             </h2>
-            <p className="text-xl text-zinc-300 max-w-3xl mx-auto font-mono">
+            <p className="text-base sm:text-lg md:text-xl text-zinc-300 max-w-3xl mx-auto font-mono px-2">
               As a new Tunisian Web3 startup, we're focused on delivering exceptional blockchain, 
               development, AI, and gaming solutions.
             </p>
@@ -214,15 +214,15 @@ export default function Services() {
         {selectedService && (
           <DialogContent className={`border-4 ${selectedService.borderColor} max-w-3xl`}>
             <DialogHeader>
-              <div className="flex items-center gap-4 mb-4">
-                <div className={`inline-flex items-center justify-center w-16 h-16 ${selectedService.bgColor} border-4 ${selectedService.borderColor}`}>
-                  <selectedService.icon className={`h-8 w-8 ${selectedService.color}`} />
+              <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-4">
+                <div className={`inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 ${selectedService.bgColor} border-4 ${selectedService.borderColor} flex-shrink-0`}>
+                  <selectedService.icon className={`h-6 w-6 sm:h-8 sm:w-8 ${selectedService.color}`} />
                 </div>
                 <DialogTitle className={selectedService.color}>
                   {selectedService.title}
                 </DialogTitle>
               </div>
-              <DialogDescription className="text-left mb-6">
+              <DialogDescription className="text-left mb-6 text-sm sm:text-base">
                 {selectedService.description}
               </DialogDescription>
             </DialogHeader>

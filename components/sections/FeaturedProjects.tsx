@@ -251,14 +251,14 @@ export default function FeaturedProjects() {
     <>
       <section id="projects" className="py-24 bg-zinc-950 border-t-4 border-yellow-400">
         <div className="container mx-auto px-4 md:px-8">
-          <div className="mb-12 text-center">
-            <div className="inline-block mb-6 px-6 py-3 bg-yellow-400/20 border-4 border-yellow-400 pixel-text text-yellow-400 text-xs">
+          <div className="mb-12 text-center px-4">
+            <div className="inline-block mb-6 px-4 sm:px-6 py-3 bg-yellow-400/20 border-4 border-yellow-400 pixel-text text-yellow-400 text-xs">
               [ CAPABILITIES ]
             </div>
-            <h2 className="text-5xl md:text-7xl font-pixel text-white mb-4 tracking-wider">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-pixel text-white mb-4 tracking-wider break-words px-2">
               OUR CAPABILITIES
             </h2>
-            <p className="text-xl text-zinc-300 max-w-3xl mx-auto font-mono">
+            <p className="text-base sm:text-lg md:text-xl text-zinc-300 max-w-3xl mx-auto font-mono px-2">
               As a new startup, we're ready to build these types of projects. 
               Let's discuss your idea and bring it to life.
             </p>
@@ -338,15 +338,15 @@ export default function FeaturedProjects() {
         {selectedCapability && (
           <DialogContent className={`border-4 ${colorClasses[selectedCapability.color as keyof typeof colorClasses].border} max-w-5xl`}>
             <DialogHeader>
-              <div className="flex items-center gap-3 mb-4">
-                <div className="inline-block px-3 py-1 border-2 border-zinc-700 bg-zinc-900/50 pixel-text text-xs text-zinc-400">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-4">
+                <div className="inline-block px-3 py-1 border-2 border-zinc-700 bg-zinc-900/50 pixel-text text-xs text-zinc-400 w-fit">
                   [{String(capabilities.indexOf(selectedCapability) + 1).padStart(2, "0")}]
                 </div>
                 <DialogTitle className={colorClasses[selectedCapability.color as keyof typeof colorClasses].text}>
                   {selectedCapability.title}
                 </DialogTitle>
               </div>
-              <DialogDescription className="text-left mb-6">
+              <DialogDescription className="text-left mb-6 text-sm sm:text-base">
                 {selectedCapability.description}
               </DialogDescription>
             </DialogHeader>
