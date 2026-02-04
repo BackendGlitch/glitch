@@ -20,6 +20,8 @@ export default function Hero() {
   }, [])
 
   useEffect(() => {
+    if (typeof window === "undefined") return
+    
     const handleMouseMove = (e: MouseEvent) => {
       // Normalize mouse position to -1 to 1 range
       const x = (e.clientX / window.innerWidth) * 2 - 1
@@ -28,7 +30,11 @@ export default function Hero() {
     }
 
     window.addEventListener("mousemove", handleMouseMove)
-    return () => window.removeEventListener("mousemove", handleMouseMove)
+    return () => {
+      if (typeof window !== "undefined") {
+        window.removeEventListener("mousemove", handleMouseMove)
+      }
+    }
   }, [])
 
   useEffect(() => {
@@ -55,6 +61,7 @@ export default function Hero() {
   }, [])
 
   const scrollToSection = (id: string) => {
+    if (typeof window === "undefined") return
     const element = document.getElementById(id)
     if (element) {
       element.scrollIntoView({ behavior: "smooth" })

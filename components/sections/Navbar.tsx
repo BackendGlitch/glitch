@@ -10,17 +10,22 @@ export default function Navbar() {
 
   // Prevent body scroll when mobile menu is open
   useEffect(() => {
+    if (typeof window === "undefined") return
+    
     if (mobileMenuOpen) {
       document.body.style.overflow = "hidden"
     } else {
       document.body.style.overflow = "unset"
     }
     return () => {
-      document.body.style.overflow = "unset"
+      if (typeof window !== "undefined") {
+        document.body.style.overflow = "unset"
+      }
     }
   }, [mobileMenuOpen])
 
   const scrollToSection = (id: string) => {
+    if (typeof window === "undefined") return
     const element = document.getElementById(id)
     if (element) {
       element.scrollIntoView({ behavior: "smooth" })
@@ -77,20 +82,7 @@ export default function Navbar() {
           </button>
         </div>
 
-        {/* Mobile menu button - Only visible on mobile */}
-        <button
-          className="md:hidden flex text-white hover:text-cyan-400 transition-all border-2 border-zinc-700 p-2.5 hover:border-cyan-400 flex-shrink-0 z-[60] relative bg-zinc-900 hover:bg-zinc-800 active:scale-95 w-[44px] h-[44px] items-center justify-center"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          aria-label="Toggle menu"
-          aria-expanded={mobileMenuOpen}
-          type="button"
-        >
-          {mobileMenuOpen ? (
-            <X className="h-6 w-6 text-cyan-400" />
-          ) : (
-            <Menu className="h-6 w-6 text-white" />
-          )}
-        </button>
+
       </div>
 
       {/* Mobile menu */}

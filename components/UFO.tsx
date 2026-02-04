@@ -1,6 +1,6 @@
 "use client"
 
-import { Suspense, useRef, useLayoutEffect, useMemo, useEffect } from "react"
+import { Suspense, useRef, useLayoutEffect, useMemo, useEffect, useState } from "react"
 import { Canvas, useFrame } from "@react-three/fiber"
 import { useGLTF, Environment } from "@react-three/drei"
 import * as THREE from "three"
@@ -266,7 +266,13 @@ function EnergyBeamDynamic({
   )
 }
 
-function SceneContent({ mousePosition }: { mousePosition: { x: number; y: number } }) {
+function SceneContent({ 
+  mousePosition, 
+  onReady 
+}: { 
+  mousePosition: { x: number; y: number }
+  onReady?: () => void
+}) {
   const ufoYRef = useRef(0)
   const serverYRef = useRef(-2.5)
 
@@ -277,6 +283,16 @@ function SceneContent({ mousePosition }: { mousePosition: { x: number; y: number
   const handleServerPositionUpdate = (y: number) => {
     serverYRef.current = y
   }
+
+  useEffect(() => {
+    // Notify parent that scene is ready
+    if (onReady) {
+      const timer = setTimeout(() => {
+        onReady()
+      }, 300)
+      return () => clearTimeout(timer)
+    }
+  }, [onReady])
 
   return (
     <>
@@ -307,24 +323,125 @@ function SceneContent({ mousePosition }: { mousePosition: { x: number; y: number
   )
 }
 
-export default function UFO({ mousePosition }: { mousePosition: { x: number; y: number } }) {
+// Loading component with glitch effect
+function UFOLoading() {
+  const [glitchActive, setGlitchActive] = useState(false)
+
   useEffect(() => {
-    // Preload the models
+    const interval = setInterval(() => {
+      setGlitchActive(true)
+      setTimeout(() => setGlitchActive(false), 200)
+    }, 2000)
+
+    return () => clearInterval(interval)
+  }, [])
+
+  return (
+    <div className="h-full w-full flex items-center justify-center bg-zinc-950/50 relative overflow-hidden">
+      {/* Animated background grid */}
+      <div className="absolute inset-0 opacity-[0.03]">
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(0, 255, 255, 0.2) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(0, 255, 255, 0.2) 1px, transparent 1px)
+            `,
+            backgroundSize: "40px 40px",
+          }}
+        />
+      </div>
+
+      {/* Glitch scan line effect */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute w-full h-1 bg-cyan-400/30 animate-glitch-scan" />
+      </div>
+
+      {/* Loading content */}
+      <div className="relative z-10 text-center space-y-4">
+        {/* UFO icon placeholder with glitch */}
+        <div className={`relative inline-block ${glitchActive ? "animate-glitch" : ""}`}>
+          <div className="w-24 h-24 sm:w-32 sm:h-32 border-4 border-cyan-400 bg-cyan-400/10 relative">
+            {/* UFO shape */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-16 h-8 sm:w-20 sm:h-10 border-2 border-cyan-400 bg-cyan-400/20 rounded-full relative">
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 border-2 border-cyan-400 bg-cyan-400/30 rounded-full" />
+              </div>
+            </div>
+            {/* Glitch overlay */}
+            {glitchActive && (
+              <>
+                <div className="absolute inset-0 border-2 border-red-400 opacity-50 translate-x-1" />
+                <div className="absolute inset-0 border-2 border-green-400 opacity-50 -translate-x-1" />
+              </>
+            )}
+          </div>
+        </div>
+
+        {/* Loading text with glitch effect */}
+        <div className="space-y-2">
+          <h3 className={`text-xl sm:text-2xl font-pixel text-cyan-400 ${glitchActive ? "animate-glitch-text" : ""}`}>
+            LOADING...
+          </h3>
+          <div className="flex items-center justify-center gap-2">
+            <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse" style={{ animationDelay: "0s" }} />
+            <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse" style={{ animationDelay: "0.2s" }} />
+            <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse" style={{ animationDelay: "0.4s" }} />
+          </div>
+        </div>
+      </div>
+
+      {/* Floating particles */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {[...Array(15)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute w-1 h-1 bg-cyan-400/40 rounded-full animate-pulse"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 2}s`,
+              animationDuration: `${2 + Math.random() * 2}s`,
+            }}
+          />
+        ))}
+      </div>
+    </div>
+  )
+}
+
+export default function UFO({ mousePosition }: { mousePosition: { x: number; y: number } }) {
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    // Preload the models for faster loading
     useGLTF.preload("/ufo.glb")
     useGLTF.preload("/server_rack.glb")
   }, [])
+
+  const handleSceneReady = () => {
+    // Hide loading once scene is ready
+    setIsLoading(false)
+  }
   
   return (
-    <div className="h-full w-full">
-      <Canvas
-        camera={{ position: [0, 0.5, 4], fov: 50 }}
-        gl={{ antialias: true, alpha: true }}
-        dpr={[1, 2]}
-      >
-        <Suspense fallback={null}>
-          <SceneContent mousePosition={mousePosition} />
-        </Suspense>
-      </Canvas>
+    <div className="h-full w-full relative">
+      {isLoading && (
+        <div className="absolute inset-0 z-10">
+          <UFOLoading />
+        </div>
+      )}
+      <div className={`h-full w-full ${isLoading ? "opacity-0" : "opacity-100 transition-opacity duration-700"}`}>
+        <Canvas
+          camera={{ position: [0, 0.5, 4], fov: 50 }}
+          gl={{ antialias: true, alpha: true }}
+          dpr={[1, 2]}
+        >
+          <Suspense fallback={null}>
+            <SceneContent mousePosition={mousePosition} onReady={handleSceneReady} />
+          </Suspense>
+        </Canvas>
+      </div>
     </div>
   )
 }
