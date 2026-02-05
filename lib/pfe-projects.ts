@@ -260,7 +260,7 @@ This project extends the Wasla ecosystem by enabling customers to book tickets f
       "Comprehensive documentation",
       "System architecture diagrams"
     ],
-    timeline: "4-5 months",
+    timeline: "3-4 months",
     context: `Wasla Network is a comprehensive transport station management system for Louaj (Tunisian public transport). The system currently includes desktop applications for station personnel, AI-powered barrier control, self-service kiosks, and network connectivity between stations.
 
 However, customers still need to visit physical stations or use the web interface to book tickets. This project aims to extend the Wasla ecosystem by developing a mobile application that allows customers to book tickets from anywhere, at any time, along with a central booking server that coordinates bookings across all connected stations in real-time.
