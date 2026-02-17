@@ -2,8 +2,19 @@
 
 import { Suspense, useRef, useLayoutEffect, useMemo, useEffect, useState } from "react"
 import { Canvas, useFrame } from "@react-three/fiber"
-import { useGLTF, Environment } from "@react-three/drei"
+import { useGLTF } from "@react-three/drei"
 import * as THREE from "three"
+
+const LOADING_PARTICLES = Array.from({ length: 15 }, (_, i) => ({
+  left: (i * 29) % 100,
+  top: (i * 47) % 100,
+  animationDelay: `${(i % 5) * 0.3}s`,
+  animationDuration: `${1.8 + (i % 4) * 0.5}s`,
+}))
+
+// Warm model cache as early as possible.
+useGLTF.preload("/ufo.glb")
+useGLTF.preload("/server_rack.glb")
 
 function NormalizedModel({
   url,
@@ -11,12 +22,18 @@ function NormalizedModel({
   rotation = [0, 0, 0] as [number, number, number],
   mousePosition = { x: 0, y: 0 },
   initialY = 0,
+  hoverAmplitude = 0.3,
+  hoverSpeed = 1.5,
+  tiltStrength = 0.3,
 }: {
   url: string
   targetSize?: number
   rotation?: [number, number, number]
   mousePosition?: { x: number; y: number }
   initialY?: number
+  hoverAmplitude?: number
+  hoverSpeed?: number
+  tiltStrength?: number
 }) {
   const { scene } = useGLTF(url)
   const ref = useRef<THREE.Group>(null)
@@ -46,12 +63,11 @@ function NormalizedModel({
 
   useFrame((state) => {
     if (ref.current) {
-      // Hover animation
-      ref.current.position.y = initialY + Math.sin(state.clock.elapsedTime * 1.5) * 0.3
+      ref.current.position.y = initialY + Math.sin(state.clock.elapsedTime * hoverSpeed) * hoverAmplitude
       
       // Mouse interaction - tilt towards mouse
-      const targetRotationX = mousePosition.y * 0.3
-      const targetRotationY = mousePosition.x * 0.3
+      const targetRotationX = mousePosition.y * tiltStrength
+      const targetRotationY = mousePosition.x * tiltStrength
       
       ref.current.rotation.x = THREE.MathUtils.lerp(
         ref.current.rotation.x,
@@ -99,6 +115,9 @@ function UFOModel({
         rotation={[0, 0, 0]}
         mousePosition={mousePosition}
         initialY={0}
+        hoverAmplitude={0.3}
+        hoverSpeed={1.5}
+        tiltStrength={0.25}
       />
     </group>
   )
@@ -106,28 +125,31 @@ function UFOModel({
 
 function ServerRackModel({ 
   mousePosition, 
-  ufoYPosition,
+  ufoYRef,
   onPositionUpdate
 }: { 
   mousePosition: { x: number; y: number }
-  ufoYPosition: number
+  ufoYRef: React.MutableRefObject<number>
   onPositionUpdate?: (y: number) => void
 }) {
   const serverRef = useRef<THREE.Group>(null)
-  const targetY = useRef(-2.5) // Starting position below
+  const targetY = useRef(-3.2)
 
   useFrame((state) => {
     if (serverRef.current) {
-      // Gradually pull server up towards UFO (but keep it below)
-      const ufoY = ufoYPosition + Math.sin(state.clock.elapsedTime * 1.5) * 0.3
-      const pullTarget = ufoY - 1.8 // Keep server 1.8 units below UFO
-      
-      // Smoothly move towards target
-      targetY.current = THREE.MathUtils.lerp(targetY.current, pullTarget, 0.02)
-      
-      // Add slight hover effect
-      const currentY = targetY.current + Math.sin(state.clock.elapsedTime * 2) * 0.1
+      const ufoY = ufoYRef.current + Math.sin(state.clock.elapsedTime * 1.5) * 0.3
+      const pullTarget = ufoY - 1.45
+      const liftStrength = THREE.MathUtils.clamp((ufoY - targetY.current + 1.6) / 3.2, 0, 1)
+      const pullSpeed = 0.022 + liftStrength * 0.03
+
+      targetY.current = THREE.MathUtils.lerp(targetY.current, pullTarget, pullSpeed)
+
+      const currentY = targetY.current + Math.sin(state.clock.elapsedTime * 4.2) * (0.03 + (1 - liftStrength) * 0.03)
       serverRef.current.position.y = currentY
+
+      // Make the pull feel physical with a small drift and spin.
+      serverRef.current.position.x = Math.sin(state.clock.elapsedTime * 1.8) * 0.06 * (1 - liftStrength * 0.45)
+      serverRef.current.position.z = Math.cos(state.clock.elapsedTime * 1.3) * 0.045 * (1 - liftStrength * 0.4)
       
       // Update position for beam
       if (onPositionUpdate) {
@@ -135,133 +157,218 @@ function ServerRackModel({
       }
       
       // Slight rotation from being pulled
-      serverRef.current.rotation.z = mousePosition.x * 0.1
-      serverRef.current.rotation.x = mousePosition.y * 0.05
+      serverRef.current.rotation.z = mousePosition.x * 0.08 + Math.sin(state.clock.elapsedTime * 2.4) * 0.035
+      serverRef.current.rotation.x = mousePosition.y * 0.04 + Math.cos(state.clock.elapsedTime * 1.9) * 0.025
+      serverRef.current.rotation.y += 0.004 + liftStrength * 0.006
     }
   })
 
   return (
-    <group ref={serverRef} position={[0, -2.5, 0]}>
+    <group ref={serverRef} position={[0, -3.2, 0]}>
       <NormalizedModel
         url="/server_rack.glb"
-        targetSize={0.8}
+        targetSize={1}
         rotation={[0, 0, 0]}
         mousePosition={mousePosition}
         initialY={0}
+        hoverAmplitude={0}
+        hoverSpeed={0}
+        tiltStrength={0.07}
       />
     </group>
   )
 }
 
 // Energy beam connecting UFO to server (dynamic version)
-function EnergyBeamDynamic({ 
-  ufoYRef, 
-  serverYRef 
-}: { 
+function EnergyBeamDynamic({
+  ufoYRef,
+  serverYRef,
+}: {
   ufoYRef: React.MutableRefObject<number>
   serverYRef: React.MutableRefObject<number>
 }) {
-  const beamRef = useRef<THREE.Mesh>(null)
-  const outerBeamRef = useRef<THREE.Mesh>(null)
+  const coreBeamRef = useRef<THREE.Mesh>(null)
+  const midBeamRef = useRef<THREE.Mesh>(null)
+  const hazeBeamRef = useRef<THREE.Mesh>(null)
+  const captureRingRef = useRef<THREE.Mesh>(null)
+  const captureGlowRef = useRef<THREE.Mesh>(null)
   const particlesRef = useRef<THREE.Points>(null)
+  const beamLightRef = useRef<THREE.PointLight>(null)
+  const captureLightRef = useRef<THREE.PointLight>(null)
+  const particleCount = 120
 
-  // Create particles for the beam
-  const particles = useMemo(() => {
-    const count = 100
-    const positions = new Float32Array(count * 3)
-    for (let i = 0; i < count; i++) {
+  const { particlePositions, particlePhases } = useMemo(() => {
+    const positions = new Float32Array(particleCount * 3)
+    const phases = new Float32Array(particleCount)
+
+    for (let i = 0; i < particleCount; i++) {
       const i3 = i * 3
-      positions[i3] = (Math.random() - 0.5) * 0.1
-      positions[i3 + 1] = -2.5 + (i / count) * 2
-      positions[i3 + 2] = (Math.random() - 0.5) * 0.1
-    }
-    return positions
-  }, [])
+      const phase = i * 0.42
+      const radius = 0.045 + (i % 6) * 0.005
 
-  useFrame(() => {
+      phases[i] = phase
+      positions[i3] = Math.sin(phase) * radius
+      positions[i3 + 1] = -2.4 + (i / particleCount) * 2.4
+      positions[i3 + 2] = Math.cos(phase) * radius
+    }
+
+    return { particlePositions: positions, particlePhases: phases }
+  }, [particleCount])
+
+  useFrame((state) => {
+    const time = state.clock.elapsedTime
     const ufoY = ufoYRef.current
     const serverY = serverYRef.current
-    
-    // Beam starts from center of UFO's underside
-    // UFO center is at ufoY, so bottom is approximately ufoY - 0.5 (half the UFO height)
-    const beamStartY = ufoY - 0.5 // Start from center of UFO's bottom
-    // Extend beam past the server to fully contain it (grab it)
-    const beamEndY = serverY - 0.6 // End below the server to fully grab it
-    const distance = Math.max(0.1, beamStartY - beamEndY)
 
-    if (beamRef.current) {
-      // Cone tip is at origin, extends downward
-      // Position so tip is at UFO bottom, base reaches server
-      beamRef.current.position.y = beamStartY
-      // Scale height to match distance
-      beamRef.current.scale.set(1, distance, 1)
+    const beamStartY = ufoY - 0.48
+    const beamEndY = serverY - 0.58
+    const distance = Math.max(0.35, beamStartY - beamEndY)
+    const pulse = 1 + Math.sin(time * 8) * 0.05
+    const captureY = beamEndY + 0.15
+
+    if (coreBeamRef.current) {
+      coreBeamRef.current.position.y = beamStartY
+      coreBeamRef.current.scale.set(0.85 * pulse, distance, 0.85 * pulse)
     }
 
-    if (outerBeamRef.current) {
-      outerBeamRef.current.position.y = beamStartY
-      outerBeamRef.current.scale.set(1, distance, 1)
+    if (midBeamRef.current) {
+      midBeamRef.current.position.y = beamStartY
+      midBeamRef.current.scale.set(1.12 * pulse, distance, 1.12 * pulse)
     }
 
-    // Animate particles moving up
+    if (hazeBeamRef.current) {
+      hazeBeamRef.current.position.y = beamStartY
+      hazeBeamRef.current.scale.set(1.45 * pulse, distance, 1.45 * pulse)
+    }
+
+    if (captureRingRef.current) {
+      const ringPulse = 0.92 + Math.sin(time * 6.5) * 0.08
+      captureRingRef.current.position.y = captureY
+      captureRingRef.current.scale.set(ringPulse, ringPulse, ringPulse)
+    }
+
+    if (captureGlowRef.current) {
+      const glowPulse = 0.9 + Math.sin(time * 5.2) * 0.1
+      captureGlowRef.current.position.y = captureY - 0.02
+      captureGlowRef.current.scale.set(glowPulse, glowPulse, glowPulse)
+    }
+
+    if (beamLightRef.current) {
+      beamLightRef.current.position.set(0, beamStartY - 0.15, 0)
+      beamLightRef.current.intensity = 2.1 + Math.sin(time * 10) * 0.28
+    }
+
+    if (captureLightRef.current) {
+      captureLightRef.current.position.set(0, captureY, 0)
+      captureLightRef.current.intensity = 1.45 + Math.sin(time * 7.2) * 0.24
+    }
+
     if (particlesRef.current) {
       const positions = particlesRef.current.geometry.attributes.position.array as Float32Array
-      for (let i = 0; i < positions.length; i += 3) {
-        positions[i + 1] += 0.02
-        if (positions[i + 1] > beamStartY) {
-          positions[i + 1] = beamEndY
+      const swirl = time * 5.4
+
+      for (let i = 0; i < particleCount; i++) {
+        const i3 = i * 3
+        const localRadius = (0.035 + ((i % 7) / 7) * 0.07) * pulse
+        const spin = swirl + particlePhases[i]
+
+        positions[i3] = Math.sin(spin) * localRadius
+        positions[i3 + 2] = Math.cos(spin) * localRadius
+        positions[i3 + 1] += 0.03 + (i % 4) * 0.004
+
+        if (positions[i3 + 1] > beamStartY - 0.06) {
+          positions[i3 + 1] = beamEndY + (i % 11) * 0.05
         }
       }
+
       particlesRef.current.geometry.attributes.position.needsUpdate = true
     }
   })
 
   return (
     <group>
-      {/* Main beam - cone shape (narrow tip at UFO, wider base extending past server) */}
-      {/* ConeGeometry: tip at top (y=0), base at bottom (y=-height) */}
-      <mesh ref={beamRef} position={[0, 0, 0]}>
-        <coneGeometry args={[0.25, 1, 16, 1, true]} />
+      <mesh ref={coreBeamRef} position={[0, 0, 0]}>
+        <coneGeometry args={[0.24, 1, 24, 1, true]} />
         <meshStandardMaterial
-          color="#00ffff"
-          emissive="#00ffff"
-          emissiveIntensity={2}
+          color="#b5ffff"
+          emissive="#9efbff"
+          emissiveIntensity={2.8}
           transparent
-          opacity={0.7}
+          opacity={0.6}
           side={THREE.DoubleSide}
-        />
-      </mesh>
-      
-      {/* Outer glow - wider cone */}
-      <mesh ref={outerBeamRef} position={[0, 0, 0]}>
-        <coneGeometry args={[0.5, 1, 16, 1, true]} />
-        <meshStandardMaterial
-          color="#00ffff"
-          emissive="#00ffff"
-          emissiveIntensity={1}
-          transparent
-          opacity={0.25}
-          side={THREE.DoubleSide}
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
         />
       </mesh>
 
-      {/* Particles */}
+      <mesh ref={midBeamRef} position={[0, 0, 0]}>
+        <coneGeometry args={[0.38, 1, 24, 1, true]} />
+        <meshStandardMaterial
+          color="#8fefff"
+          emissive="#8fefff"
+          emissiveIntensity={1.9}
+          transparent
+          opacity={0.26}
+          side={THREE.DoubleSide}
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
+        />
+      </mesh>
+
+      <mesh ref={hazeBeamRef} position={[0, 0, 0]}>
+        <coneGeometry args={[0.58, 1, 24, 1, true]} />
+        <meshStandardMaterial
+          color="#6bd5ff"
+          emissive="#6bd5ff"
+          emissiveIntensity={1.1}
+          transparent
+          opacity={0.12}
+          side={THREE.DoubleSide}
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
+        />
+      </mesh>
+
+      <mesh ref={captureRingRef} rotation={[-Math.PI / 2, 0, 0]}>
+        <ringGeometry args={[0.18, 0.44, 40]} />
+        <meshBasicMaterial
+          color="#b6ffff"
+          transparent
+          opacity={0.52}
+          side={THREE.DoubleSide}
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
+        />
+      </mesh>
+
+      <mesh ref={captureGlowRef} rotation={[-Math.PI / 2, 0, 0]}>
+        <circleGeometry args={[0.29, 40]} />
+        <meshBasicMaterial
+          color="#95eeff"
+          transparent
+          opacity={0.2}
+          side={THREE.DoubleSide}
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
+        />
+      </mesh>
+
       <points ref={particlesRef}>
         <bufferGeometry>
-          <bufferAttribute
-            attach="attributes-position"
-            args={[particles, 3]}
-            count={100}
-            itemSize={3}
-          />
+          <bufferAttribute attach="attributes-position" args={[particlePositions, 3]} />
         </bufferGeometry>
         <pointsMaterial
-          color="#00ffff"
-          size={0.05}
+          color="#d5ffff"
+          size={0.032}
           transparent
-          opacity={0.8}
+          opacity={0.86}
           blending={THREE.AdditiveBlending}
+          depthWrite={false}
         />
       </points>
+
+      <pointLight ref={beamLightRef} color="#9deeff" intensity={2.1} distance={3.8} decay={2} />
+      <pointLight ref={captureLightRef} color="#7fe9ff" intensity={1.45} distance={2.6} decay={2} />
     </group>
   )
 }
@@ -285,24 +392,22 @@ function SceneContent({
   }
 
   useEffect(() => {
-    // Notify parent that scene is ready
-    if (onReady) {
-      const timer = setTimeout(() => {
-        onReady()
-      }, 300)
-      return () => clearTimeout(timer)
-    }
+    if (!onReady) return
+
+    const frame = requestAnimationFrame(() => {
+      onReady()
+    })
+    return () => cancelAnimationFrame(frame)
   }, [onReady])
 
   return (
     <>
       {/* Lighting */}
-      <ambientLight intensity={0.4} />
-      <directionalLight position={[5, 8, 4]} intensity={1.2} />
-      <pointLight position={[0, 3, 2]} intensity={1} color="#00ffff" />
-      <pointLight position={[0, -2, 2]} intensity={0.5} color="#00ffff" />
-
-      <Environment preset="city" />
+      <ambientLight intensity={0.35} />
+      <directionalLight position={[5, 8, 4]} intensity={1.15} />
+      <pointLight position={[0, 2.1, 1.4]} intensity={1.25} color="#8af8ff" />
+      <pointLight position={[0, -1.6, 0.8]} intensity={0.85} color="#8ce7ff" />
+      <pointLight position={[-1.8, 1.4, 1.5]} intensity={0.65} color="#c0f7ff" />
 
       {/* UFO */}
       <UFOModel 
@@ -313,7 +418,7 @@ function SceneContent({
       {/* Server rack being pulled up */}
       <ServerRackModel 
         mousePosition={mousePosition} 
-        ufoYPosition={ufoYRef.current}
+        ufoYRef={ufoYRef}
         onPositionUpdate={handleServerPositionUpdate}
       />
       
@@ -393,15 +498,15 @@ function UFOLoading() {
 
       {/* Floating particles */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(15)].map((_, i) => (
+        {LOADING_PARTICLES.map((particle, i) => (
           <div
             key={i}
             className="absolute w-1 h-1 bg-cyan-400/40 rounded-full animate-pulse"
             style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 2}s`,
-              animationDuration: `${2 + Math.random() * 2}s`,
+              left: `${particle.left}%`,
+              top: `${particle.top}%`,
+              animationDelay: particle.animationDelay,
+              animationDuration: particle.animationDuration,
             }}
           />
         ))}
@@ -412,12 +517,6 @@ function UFOLoading() {
 
 export default function UFO({ mousePosition }: { mousePosition: { x: number; y: number } }) {
   const [isLoading, setIsLoading] = useState(true)
-
-  useEffect(() => {
-    // Preload the models for faster loading
-    useGLTF.preload("/ufo.glb")
-    useGLTF.preload("/server_rack.glb")
-  }, [])
 
   const handleSceneReady = () => {
     // Hide loading once scene is ready
@@ -433,9 +532,9 @@ export default function UFO({ mousePosition }: { mousePosition: { x: number; y: 
       )}
       <div className={`h-full w-full ${isLoading ? "opacity-0" : "opacity-100 transition-opacity duration-700"}`}>
         <Canvas
-          camera={{ position: [0, 0.5, 4], fov: 50 }}
-          gl={{ antialias: true, alpha: true }}
-          dpr={[1, 2]}
+          camera={{ position: [0, 0.45, 3.6], fov: 48 }}
+          gl={{ antialias: false, alpha: true, powerPreference: "high-performance" }}
+          dpr={[1, 1.5]}
         >
           <Suspense fallback={null}>
             <SceneContent mousePosition={mousePosition} onReady={handleSceneReady} />

@@ -1,49 +1,45 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import { Press_Start_2P } from "next/font/google";
-import { Crimson_Text } from "next/font/google";
-import "./globals.css";
+import type { Metadata } from "next"
+import { IBM_Plex_Mono, Press_Start_2P, Space_Grotesk } from "next/font/google"
+import "./globals.css"
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const headingFont = Space_Grotesk({
+  variable: "--font-heading",
   subsets: ["latin"],
-});
+})
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const bodyFont = Space_Grotesk({
+  variable: "--font-body",
   subsets: ["latin"],
-});
+})
 
-const pressStart2P = Press_Start_2P({
-  weight: "400",
+const monoFont = IBM_Plex_Mono({
+  variable: "--font-mono",
+  weight: ["400", "500"],
+  subsets: ["latin"],
+})
+
+const pixelFont = Press_Start_2P({
   variable: "--font-pixel",
+  weight: "400",
   subsets: ["latin"],
-});
-
-const crimsonText = Crimson_Text({
-  weight: ["400", "600", "700"],
-  variable: "--font-latex",
-  subsets: ["latin"],
-});
+})
 
 export const metadata: Metadata = {
-  title: "Glitch - Tunisian Web3 Startup | Blockchain, AI & Game Development",
-  description: "Glitch is a new Tunisian Web3 startup founded in 2024, specializing in blockchain gamification, full-stack web development, AI solutions, and game development. Building the future of decentralized technology from Tunisia.",
-};
+  title: "Glitch | Backend Infrastructure and Web3 Engineering",
+  description:
+    "Glitch is a Tunisia-based startup focused on backend infrastructure and Web3/blockchain development. Backend Glitch is our flagship product, currently waiting for funding to operate at scale.",
+}
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} ${pressStart2P.variable} ${crimsonText.variable} antialiased`}
-        suppressHydrationWarning
-      >
+      <body className={`${headingFont.variable} ${bodyFont.variable} ${monoFont.variable} ${pixelFont.variable} antialiased`}>
         {children}
       </body>
     </html>
-  );
+  )
 }

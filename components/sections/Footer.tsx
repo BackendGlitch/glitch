@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { Github, Twitter, Linkedin, Mail, MapPin } from "lucide-react"
+import { Github, Linkedin, Mail, MapPin, Twitter } from "lucide-react"
 
 export default function Footer() {
   return (
@@ -11,59 +11,50 @@ export default function Footer() {
         <div className="grid gap-8 md:grid-cols-4 mb-8">
           <div>
             <Link href="/" className="flex items-center gap-2 mb-4">
-              <Image
-                src="/logo.png"
-                alt="Glitch Logo"
-                width={32}
-                height={32}
-                className="h-8 w-8"
-              />
+              <Image src="/logo.png" alt="Glitch Logo" width={32} height={32} className="h-8 w-8" />
               <span className="text-2xl font-pixel text-white">GLITCH</span>
             </Link>
             <p className="text-sm text-zinc-400 mb-4 font-mono">
-              A Tunisian Web3 startup building the future of blockchain, gamification, AI, and game development.
+              Tunisia-based startup building backend infrastructure and Web3/blockchain products.
             </p>
             <div className="flex items-center gap-2 text-sm text-zinc-500 font-mono">
               <MapPin className="h-4 w-4" />
-              <span>Tunisia</span>
+              <span>Based in Tunisia</span>
             </div>
           </div>
+
           <div>
-            <h3 className="text-sm font-pixel text-green-400 mb-4">[ SERVICES ]</h3>
+            <h3 className="text-sm font-pixel text-green-400 mb-4">[ FOCUS ]</h3>
             <ul className="space-y-2 text-sm text-zinc-400 font-mono">
               <li>
                 <a href="#services" className="hover:text-green-400 transition-colors">
-                  Blockchain Gamification
+                  Backend Glitch Platform
                 </a>
               </li>
               <li>
                 <a href="#services" className="hover:text-green-400 transition-colors">
-                  Full-Stack Development
+                  Custom Backend Engineering
                 </a>
               </li>
               <li>
                 <a href="#services" className="hover:text-green-400 transition-colors">
-                  AI Solutions
-                </a>
-              </li>
-              <li>
-                <a href="#services" className="hover:text-green-400 transition-colors">
-                  Game Development
+                  Web3 + Blockchain Development
                 </a>
               </li>
             </ul>
           </div>
+
           <div>
             <h3 className="text-sm font-pixel text-cyan-400 mb-4">[ COMPANY ]</h3>
             <ul className="space-y-2 text-sm text-zinc-400 font-mono">
               <li>
-                <a href="#about" className="hover:text-cyan-400 transition-colors">
-                  About Us
+                <a href="#projects" className="hover:text-cyan-400 transition-colors">
+                  Products & Projects
                 </a>
               </li>
               <li>
-                <a href="#projects" className="hover:text-cyan-400 transition-colors">
-                  Projects
+                <a href="#about" className="hover:text-cyan-400 transition-colors">
+                  About Glitch
                 </a>
               </li>
               <li>
@@ -73,6 +64,7 @@ export default function Footer() {
               </li>
             </ul>
           </div>
+
           <div>
             <h3 className="text-sm font-pixel text-yellow-400 mb-4">[ CONNECT ]</h3>
             <div className="flex gap-4 mb-4">
@@ -81,7 +73,7 @@ export default function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-zinc-400 hover:text-yellow-400 transition-colors border-2 border-zinc-700 p-2 hover:border-yellow-400"
-                aria-label="X (Twitter)"
+                aria-label="X"
               >
                 <Twitter className="h-5 w-5" />
               </a>
@@ -111,15 +103,12 @@ export default function Footer() {
                 <Mail className="h-5 w-5" />
               </a>
             </div>
-            <p className="text-xs text-zinc-500 font-pixel">
-              FOUNDED 2024 • TUNISIAN WEB3 STARTUP
-            </p>
+            <p className="text-xs text-zinc-500 font-pixel">DEPLOYED: APP.BACKENDGLITCH.COM • WAITING FOR FUNDING</p>
           </div>
         </div>
+
         <div className="border-t-4 border-zinc-800 pt-8 text-center">
-          <p className="text-sm text-zinc-500 font-pixel">
-            &copy; {new Date().getFullYear()} GLITCH. ALL RIGHTS RESERVED. | TUNISIAN WEB3 STARTUP
-          </p>
+          <p className="text-sm text-zinc-500 font-pixel">&copy; {new Date().getFullYear()} GLITCH. BACKEND + WEB3 STARTUP.</p>
         </div>
       </div>
     </footer>

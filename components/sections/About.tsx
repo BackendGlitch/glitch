@@ -1,6 +1,6 @@
 "use client"
 
-import { MapPin, Rocket, Target, Zap, Code, Brain, Gamepad2 } from "lucide-react"
+import { Flag, Handshake, MapPin, Target, Zap } from "lucide-react"
 
 export default function About() {
   return (
@@ -9,112 +9,77 @@ export default function About() {
         <div className="max-w-6xl mx-auto">
           <div className="mb-16 text-center px-4">
             <div className="inline-block mb-6 px-4 sm:px-6 py-3 bg-purple-400/20 border-4 border-purple-400 pixel-text text-purple-400 text-xs">
-              [ ABOUT US ]
+              [ COMPANY ]
             </div>
             <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-pixel text-white mb-6 tracking-wider break-words px-2">
               ABOUT GLITCH
             </h2>
             <p className="text-base sm:text-lg md:text-xl text-zinc-300 max-w-3xl mx-auto font-mono px-2">
-              We're a fresh Web3 startup based in Tunisia, passionate about blockchain technology, 
-              gamification, and innovative software solutions.
+              Tunisia-based startup focused on one clear lane: backend infrastructure + Web3/blockchain execution.
             </p>
           </div>
-          
-          {/* Main Story Card */}
+
           <div className="mb-12 pixel-card border-pink-400 bg-pink-400/10 p-6 md:p-8">
             <div className="flex flex-col md:flex-row items-start gap-4 md:gap-6">
               <div className="flex-shrink-0 w-14 h-14 md:w-16 md:h-16 border-4 border-pink-400 bg-pink-400/20 flex items-center justify-center mb-4 md:mb-0">
                 <MapPin className="h-8 w-8 text-pink-400" />
               </div>
               <div>
-                <h3 className="text-3xl font-pixel text-pink-400 mb-4">BORN IN TUNISIA, BUILT FOR THE WORLD</h3>
+                <h3 className="text-3xl font-pixel text-pink-400 mb-4">BUILT IN TUNISIA. AIMED AT GLOBAL EXECUTION.</h3>
                 <p className="text-zinc-300 leading-relaxed text-lg font-mono">
-                  Glitch was founded in 2024 as a Web3 blockchain startup in Tunisia. We believe that 
-                  great innovation can come from anywhere, and we're proud to be part of Tunisia's growing 
-                  tech ecosystem. Our mission is to create cutting-edge blockchain solutions, gamification 
-                  platforms, and web applications that make a real impact.
+                  We started in 2024 and chose focus over noise. Glitch is structured like a YC startup profile: clear product,
+                  clear capability, clear proof. We build and ship backend and blockchain systems with measurable outcomes.
                 </p>
               </div>
             </div>
           </div>
 
-          {/* What We Do Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
             <div className="pixel-card border-cyan-400 bg-cyan-400/10 p-6">
               <div className="flex items-start gap-4">
-                <Zap className="h-8 w-8 text-cyan-400 flex-shrink-0" />
+                <Flag className="h-8 w-8 text-cyan-400 flex-shrink-0" />
                 <div>
-                  <h3 className="text-xl font-pixel text-cyan-400 mb-2">
-                    BLOCKCHAIN GAMIFICATION
-                  </h3>
+                  <h3 className="text-xl font-pixel text-cyan-400 mb-2">OUR POSITIONING</h3>
                   <p className="text-zinc-300 leading-relaxed font-mono text-sm">
-                    We specialize in creating engaging Web3 experiences through token economics, 
-                    NFT mechanics, and innovative game theory models that drive user engagement.
+                    We do not present as a do-everything agency. We focus on backend architecture and Web3/blockchain products.
                   </p>
                 </div>
               </div>
             </div>
-            
+
             <div className="pixel-card border-yellow-400 bg-yellow-400/10 p-6">
               <div className="flex items-start gap-4">
-                <Code className="h-8 w-8 text-yellow-400 flex-shrink-0" />
+                <Zap className="h-8 w-8 text-yellow-400 flex-shrink-0" />
                 <div>
-                  <h3 className="text-xl font-pixel text-yellow-400 mb-2">
-                    FULL-STACK DEVELOPMENT
-                  </h3>
+                  <h3 className="text-xl font-pixel text-yellow-400 mb-2">CURRENT PRIORITY</h3>
                   <p className="text-zinc-300 leading-relaxed font-mono text-sm">
-                    From frontend to backend, we build scalable, production-ready applications 
-                    using modern technologies like Next.js, React, TypeScript, and cloud infrastructure.
+                    Launch Backend Glitch at full capacity by securing funding and operating capital.
                   </p>
                 </div>
               </div>
             </div>
-            
-            <div className="pixel-card border-purple-400 bg-purple-400/10 p-6">
-              <div className="flex items-start gap-4">
-                <Brain className="h-8 w-8 text-purple-400 flex-shrink-0" />
-                <div>
-                  <h3 className="text-xl font-pixel text-purple-400 mb-2">
-                    AI-POWERED SOLUTIONS
-                  </h3>
-                  <p className="text-zinc-300 leading-relaxed font-mono text-sm">
-                    We integrate cutting-edge AI technologies to enhance user experiences, 
-                    automate workflows, and provide intelligent insights for your business.
-                  </p>
-                </div>
-              </div>
-            </div>
-            
+
             <div className="pixel-card border-green-400 bg-green-400/10 p-6">
               <div className="flex items-start gap-4">
-                <Gamepad2 className="h-8 w-8 text-green-400 flex-shrink-0" />
+                <Target className="h-8 w-8 text-green-400 flex-shrink-0" />
                 <div>
-                  <h3 className="text-xl font-pixel text-green-400 mb-2">
-                    GAME DEVELOPMENT
-                  </h3>
+                  <h3 className="text-xl font-pixel text-green-400 mb-2">EXECUTION PROOF</h3>
                   <p className="text-zinc-300 leading-relaxed font-mono text-sm">
-                    We create immersive web games and interactive experiences with real-time 
-                    multiplayer capabilities and seamless blockchain integration.
+                    Wasla is already delivered and used in transport station operations in Tunisia.
                   </p>
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Vision Card */}
-          <div className="pixel-card border-cyan-400 bg-gradient-to-br from-cyan-400/10 to-purple-400/10 p-6 md:p-8">
-            <div className="flex flex-col md:flex-row items-start gap-4 md:gap-6">
-              <div className="flex-shrink-0 w-14 h-14 md:w-16 md:h-16 border-4 border-cyan-400 bg-cyan-400/20 flex items-center justify-center mb-4 md:mb-0">
-                <Target className="h-8 w-8 text-cyan-400" />
-              </div>
-              <div>
-                <h3 className="text-3xl font-pixel text-cyan-400 mb-4">OUR VISION</h3>
-                <p className="text-zinc-200 leading-relaxed text-lg font-mono">
-                  As a new startup, we're building something special. We're not just another tech company—we're 
-                  a team of passionate developers, designers, and blockchain enthusiasts who believe in the power 
-                  of Web3 technology. We're here to create innovative solutions, push boundaries, and help bring 
-                  the decentralized future to life. Join us on this journey.
-                </p>
+            <div className="pixel-card border-purple-400 bg-purple-400/10 p-6">
+              <div className="flex items-start gap-4">
+                <Handshake className="h-8 w-8 text-purple-400 flex-shrink-0" />
+                <div>
+                  <h3 className="text-xl font-pixel text-purple-400 mb-2">PARTNERSHIPS</h3>
+                  <p className="text-zinc-300 leading-relaxed font-mono text-sm">
+                    Open to strategic partners, founders, and investors who align with backend and blockchain products.
+                  </p>
+                </div>
               </div>
             </div>
           </div>

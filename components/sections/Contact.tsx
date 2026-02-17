@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { MapPin, Mail, Send, Loader2 } from "lucide-react"
+import { Loader2, Mail, MapPin, Send } from "lucide-react"
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -37,38 +37,31 @@ export default function Contact() {
         throw new Error(data.error || "Failed to send message")
       }
 
-      // Success
       setSubmitStatus({
         type: "success",
-        message: "Thank you for your message! We'll get back to you soon.",
+        message: "Thanks for reaching out. We will reply shortly.",
       })
       setFormData({ name: "", email: "", message: "" })
 
-      // Clear success message after 5 seconds
       setTimeout(() => {
         setSubmitStatus({ type: null, message: "" })
       }, 5000)
     } catch (error) {
       setSubmitStatus({
         type: "error",
-        message:
-          error instanceof Error
-            ? error.message
-            : "Failed to send message. Please try again later.",
+        message: error instanceof Error ? error.message : "Failed to send message. Please try again later.",
       })
     } finally {
       setIsSubmitting(false)
     }
   }
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     })
-    // Clear status when user starts typing
+
     if (submitStatus.type) {
       setSubmitStatus({ type: null, message: "" })
     }
@@ -82,20 +75,18 @@ export default function Contact() {
             [ CONTACT ]
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-pixel text-white mb-4 tracking-wider break-words px-2">
-            GET IN TOUCH
+            LET US TALK
           </h2>
           <p className="text-base sm:text-lg md:text-xl text-zinc-300 max-w-2xl mx-auto font-mono px-2">
-            We're a new startup and we'd love to hear from you. Let's build something amazing together.
+            Reach out for backend or Web3 execution, partnerships, or funding conversations for Backend Glitch.
           </p>
         </div>
+
         <div className="grid grid-cols-1 gap-12 md:grid-cols-2 max-w-5xl mx-auto">
           <div>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label
-                  htmlFor="name"
-                  className="block text-sm font-pixel text-zinc-300 mb-2"
-                >
+                <label htmlFor="name" className="block text-sm font-pixel text-zinc-300 mb-2">
                   [ NAME ]
                 </label>
                 <Input
@@ -110,11 +101,9 @@ export default function Contact() {
                   className="bg-zinc-900 border-4 border-zinc-700 text-zinc-100 placeholder:text-zinc-500 focus:border-pink-400 font-mono disabled:opacity-50 disabled:cursor-not-allowed"
                 />
               </div>
+
               <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-pixel text-zinc-300 mb-2"
-                >
+                <label htmlFor="email" className="block text-sm font-pixel text-zinc-300 mb-2">
                   [ EMAIL ]
                 </label>
                 <Input
@@ -124,16 +113,14 @@ export default function Contact() {
                   required
                   value={formData.email}
                   onChange={handleChange}
-                  placeholder="your.email@example.com"
+                  placeholder="you@company.com"
                   disabled={isSubmitting}
                   className="bg-zinc-900 border-4 border-zinc-700 text-zinc-100 placeholder:text-zinc-500 focus:border-pink-400 font-mono disabled:opacity-50 disabled:cursor-not-allowed"
                 />
               </div>
+
               <div>
-                <label
-                  htmlFor="message"
-                  className="block text-sm font-pixel text-zinc-300 mb-2"
-                >
+                <label htmlFor="message" className="block text-sm font-pixel text-zinc-300 mb-2">
                   [ MESSAGE ]
                 </label>
                 <Textarea
@@ -142,14 +129,13 @@ export default function Contact() {
                   required
                   value={formData.message}
                   onChange={handleChange}
-                  placeholder="Tell us about your project or idea..."
+                  placeholder="Tell us about your project, partnership, or funding discussion..."
                   rows={6}
                   disabled={isSubmitting}
                   className="bg-zinc-900 border-4 border-zinc-700 text-zinc-100 placeholder:text-zinc-500 focus:border-pink-400 font-mono disabled:opacity-50 disabled:cursor-not-allowed"
                 />
               </div>
 
-              {/* Status Message */}
               {submitStatus.type && (
                 <div
                   className={`p-4 border-4 ${
@@ -181,34 +167,30 @@ export default function Contact() {
               </button>
             </form>
           </div>
+
           <div className="flex flex-col justify-center space-y-6">
             <div className="pixel-card border-cyan-400 bg-cyan-400/10 p-6">
               <div className="mb-4 flex items-center gap-3 text-cyan-400">
                 <MapPin className="h-6 w-6" />
                 <h3 className="text-lg font-pixel text-cyan-400">[ LOCATION ]</h3>
               </div>
-              <p className="text-zinc-300 text-lg font-mono mb-2">
-                Tunisia
-              </p>
-              <p className="text-sm text-zinc-500 font-mono">
-                Remote & On-site collaboration available
-              </p>
+              <p className="text-zinc-300 text-lg font-mono mb-2">Tunisia</p>
+              <p className="text-sm text-zinc-500 font-mono">Remote and on-site collaboration available.</p>
             </div>
+
             <div className="pixel-card border-yellow-400 bg-yellow-400/10 p-6">
               <div className="mb-4 flex items-center gap-3 text-yellow-400">
                 <Mail className="h-6 w-6" />
                 <h3 className="text-lg font-pixel text-yellow-400">[ EMAIL ]</h3>
               </div>
-              <p className="text-zinc-300 font-mono">
-                Contact us for inquiries, partnerships, or project discussions
-              </p>
+              <p className="text-zinc-300 font-mono">contact@backendglitch.com</p>
             </div>
+
             <div className="pixel-card border-purple-400 bg-gradient-to-br from-purple-400/10 to-pink-400/10 p-6">
-              <h3 className="text-lg font-pixel text-purple-400 mb-2">[ NEW STARTUP ]</h3>
+              <h3 className="text-lg font-pixel text-purple-400 mb-2">[ FUNDING NOTE ]</h3>
               <p className="text-zinc-300 text-sm font-mono">
-                We're just getting started, but we're ready to take on exciting projects. 
-                Whether you need blockchain solutions, web development, AI integration, or game development, 
-                we're here to help bring your vision to life.
+                Backend Glitch is waiting for funding and operating money to run fully. We are open to investor and strategic
+                partner discussions.
               </p>
             </div>
           </div>
