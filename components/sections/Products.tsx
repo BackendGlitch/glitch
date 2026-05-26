@@ -40,10 +40,6 @@ function WaslaMapPreview() {
         <span className="w-1.5 h-1.5 rounded-full bg-[#7C3AED]" style={{ animation: "pulse-dot 2s ease-in-out infinite" }} />
         <span className="text-[8px] font-mono text-[#7C3AED]">Monastir</span>
       </div>
-      <div className="absolute top-[14%] right-[18%] flex items-center gap-1">
-        <span className="w-1.5 h-1.5 rounded-full bg-[#7C3AED]" style={{ animation: "pulse-dot 2.5s ease-in-out infinite 0.3s" }} />
-        <span className="text-[8px] font-mono text-[#7C3AED]">Nabeul</span>
-      </div>
     </div>
   )
 }
@@ -224,6 +220,11 @@ function WaslaDialog({ open, onClose }: { open: boolean; onClose: () => void }) 
             <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5">
               <div className="flex items-center gap-2 mb-2"><MapPin className="h-4 w-4 text-[#7C3AED]" /><span className="text-xs font-mono text-[#A0A0A0] uppercase tracking-wider">Stations</span></div>
               <Image src="/tn.svg" alt="Tunisia" width={200} height={240} className="w-full h-auto max-h-[160px] object-contain map-dark rounded-lg" />
+              <div className="flex flex-wrap gap-2 mt-2">
+                {["Monastir Center", "Monastir Jammel", "Monastir Ksour Hellal", "Nabeul Grombalia"].map((s) => (
+                  <span key={s} className="text-[10px] text-[#A0A0A0] font-mono inline-flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-[#7C3AED]" style={{ animation: "pulse-dot 2s ease-in-out infinite" }} />{s}</span>
+                ))}
+              </div>
             </div>
           </div>
         </div>
