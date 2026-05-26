@@ -1,90 +1,59 @@
 "use client"
 
-import { Flag, Handshake, MapPin, Target, Zap } from "lucide-react"
+import { useEffect, useRef, useState } from "react"
+import { motion } from "framer-motion"
+
+function Stat({ v, l, glitch }: { v: string; l: string; glitch?: boolean }) {
+  const [inView, setInView] = useState(false)
+  const [showInfinity, setShowInfinity] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => { const el = ref.current; if (!el) return; const o = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setInView(true); o.disconnect() } }, { threshold: 0.5 }); o.observe(el); return () => o.disconnect() }, [])
+
+  // Swap "8" → "∞" in sync with CSS keyframe (hold phase at ~18-60% of 3.6s)
+  useEffect(() => {
+    if (!glitch || !inView) return
+    const show = () => setShowInfinity(true)
+    const hide = () => setShowInfinity(false)
+    const loop = () => {
+      setTimeout(show, 650)
+      setTimeout(hide, 2150)
+    }
+    loop()
+    const id = setInterval(loop, 3600)
+    return () => clearInterval(id)
+  }, [glitch, inView])
+
+  return (
+    <div ref={ref} className="text-center">
+      <div className={`text-4xl md:text-5xl font-heading font-bold mb-2 transition-all duration-700 ${inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"} ${glitch ? "animate-stat-glitch-infinity" : ""}`}>
+        {glitch ? (showInfinity ? "∞" : "8") : v}
+      </div>
+      <div className="text-sm text-[#A0A0A0]">{l}</div>
+    </div>
+  )
+}
 
 export default function About() {
   return (
-    <section id="about" className="py-24 bg-gradient-to-b from-zinc-950 to-purple-950/20 border-t-4 border-purple-400">
-      <div className="container mx-auto px-4 md:px-8">
-        <div className="max-w-6xl mx-auto">
-          <div className="mb-16 text-center px-4">
-            <div className="inline-block mb-6 px-4 sm:px-6 py-3 bg-purple-400/20 border-4 border-purple-400 pixel-text text-purple-400 text-xs">
-              [ COMPANY ]
-            </div>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-pixel text-white mb-6 tracking-wider break-words px-2">
-              ABOUT GLITCH
-            </h2>
-            <p className="text-base sm:text-lg md:text-xl text-zinc-300 max-w-3xl mx-auto font-mono px-2">
-              Tunisia-based startup focused on one clear lane: backend infrastructure + Web3/blockchain execution.
-            </p>
-          </div>
-
-          <div className="mb-12 pixel-card border-pink-400 bg-pink-400/10 p-6 md:p-8">
-            <div className="flex flex-col md:flex-row items-start gap-4 md:gap-6">
-              <div className="flex-shrink-0 w-14 h-14 md:w-16 md:h-16 border-4 border-pink-400 bg-pink-400/20 flex items-center justify-center mb-4 md:mb-0">
-                <MapPin className="h-8 w-8 text-pink-400" />
-              </div>
-              <div>
-                <h3 className="text-3xl font-pixel text-pink-400 mb-4">BUILT IN TUNISIA. AIMED AT GLOBAL EXECUTION.</h3>
-                <p className="text-zinc-300 leading-relaxed text-lg font-mono">
-                  We started in 2024 and chose focus over noise. Glitch is structured like a YC startup profile: clear product,
-                  clear capability, clear proof. We build and ship backend and blockchain systems with measurable outcomes.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-            <div className="pixel-card border-cyan-400 bg-cyan-400/10 p-6">
-              <div className="flex items-start gap-4">
-                <Flag className="h-8 w-8 text-cyan-400 flex-shrink-0" />
-                <div>
-                  <h3 className="text-xl font-pixel text-cyan-400 mb-2">OUR POSITIONING</h3>
-                  <p className="text-zinc-300 leading-relaxed font-mono text-sm">
-                    We do not present as a do-everything agency. We focus on backend architecture and Web3/blockchain products.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="pixel-card border-yellow-400 bg-yellow-400/10 p-6">
-              <div className="flex items-start gap-4">
-                <Zap className="h-8 w-8 text-yellow-400 flex-shrink-0" />
-                <div>
-                  <h3 className="text-xl font-pixel text-yellow-400 mb-2">CURRENT PRIORITY</h3>
-                  <p className="text-zinc-300 leading-relaxed font-mono text-sm">
-                    Launch Backend Glitch at full capacity by securing funding and operating capital.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="pixel-card border-green-400 bg-green-400/10 p-6">
-              <div className="flex items-start gap-4">
-                <Target className="h-8 w-8 text-green-400 flex-shrink-0" />
-                <div>
-                  <h3 className="text-xl font-pixel text-green-400 mb-2">EXECUTION PROOF</h3>
-                  <p className="text-zinc-300 leading-relaxed font-mono text-sm">
-                    Wasla is already delivered and used in transport station operations in Tunisia.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="pixel-card border-purple-400 bg-purple-400/10 p-6">
-              <div className="flex items-start gap-4">
-                <Handshake className="h-8 w-8 text-purple-400 flex-shrink-0" />
-                <div>
-                  <h3 className="text-xl font-pixel text-purple-400 mb-2">PARTNERSHIPS</h3>
-                  <p className="text-zinc-300 leading-relaxed font-mono text-sm">
-                    Open to strategic partners, founders, and investors who align with backend and blockchain products.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+    <section id="about" className="py-24 md:py-32 bg-black">
+      <div className="container mx-auto px-6 md:px-8 max-w-2xl">
+        <p className="text-xs font-mono tracking-[0.2em] uppercase text-[#A0A0A0] mb-3 text-center">About</p>
+        <h2 className="text-3xl md:text-5xl font-heading font-bold text-white mb-5 text-center">Built in Tunisia.<br />Engineered for the World.</h2>
+        <p className="text-sm text-[#A0A0A0] leading-relaxed text-center mb-5 max-w-lg mx-auto">
+          We are a young startup from Tunisia building global-grade technology at the intersection of AI agents, Web3 infrastructure, and backend systems. We do not chase trends — we ship products that work.
+        </p>
+        <p className="inline-flex items-center gap-2 text-xs text-[#A0A0A0] font-mono justify-center w-full mb-12">
+          <TunisiaFlag className="w-5 h-3.5 rounded-sm" /> Made in Tunisia — Operating globally
+        </p>
+        <motion.div initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="grid grid-cols-3 gap-8 max-w-sm mx-auto">
+          {[{ v: "3", l: "Products Shipped" }, { v: "8", l: "Hackathon Wins", glitch: true }, { v: "1", l: "Mission" }].map((s) => <Stat key={s.l} {...s} />)}
+        </motion.div>
       </div>
     </section>
   )
+}
+
+function TunisiaFlag({ className }: { className?: string }) {
+  return <svg viewBox="0 0 30 20" className={className} xmlns="http://www.w3.org/2000/svg"><rect width="30" height="20" fill="#E70013" /><circle cx="15" cy="10" r="5" fill="white" /><path d="M15 6.5 A4 4 0 0 0 12 10 A4 4 0 0 0 15 13.5 A3.5 3.5 0 0 1 13 10 A3.5 3.5 0 0 1 15 6.5Z" fill="#E70013" /><polygon points="16.5,7.5 15.5,8 15,7 14.5,8 13.5,7.5 14,8.5 13,9 14,9.5 13.5,10.5 14.5,10 15,11 15.5,10 16.5,10.5 16,9.5 17,9 16,8.5" fill="#E70013" /></svg>
 }

@@ -2,115 +2,44 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { Github, Linkedin, Mail, MapPin, Twitter } from "lucide-react"
+import { Github, Linkedin, Twitter } from "lucide-react"
+
+const socials = [
+  { icon: Twitter, href: "https://x.com/backend_glitch", label: "X" },
+  { icon: Github, href: "https://github.com/BackendGlitch", label: "GitHub" },
+  { icon: Linkedin, href: "https://www.linkedin.com/company/backendglitch", label: "LinkedIn" },
+]
 
 export default function Footer() {
   return (
-    <footer className="border-t-4 border-green-400 bg-zinc-950 py-12">
-      <div className="container mx-auto px-4 md:px-8">
-        <div className="grid gap-8 md:grid-cols-4 mb-8">
-          <div>
-            <Link href="/" className="flex items-center gap-2 mb-4">
-              <Image src="/logo.png" alt="Glitch Logo" width={32} height={32} className="h-8 w-8" />
-              <span className="text-2xl font-pixel text-white">GLITCH</span>
-            </Link>
-            <p className="text-sm text-zinc-400 mb-4 font-mono">
-              Tunisia-based startup building backend infrastructure and Web3/blockchain products.
-            </p>
-            <div className="flex items-center gap-2 text-sm text-zinc-500 font-mono">
-              <MapPin className="h-4 w-4" />
-              <span>Based in Tunisia</span>
-            </div>
-          </div>
-
-          <div>
-            <h3 className="text-sm font-pixel text-green-400 mb-4">[ FOCUS ]</h3>
-            <ul className="space-y-2 text-sm text-zinc-400 font-mono">
-              <li>
-                <a href="#services" className="hover:text-green-400 transition-colors">
-                  Backend Glitch Platform
-                </a>
-              </li>
-              <li>
-                <a href="#services" className="hover:text-green-400 transition-colors">
-                  Custom Backend Engineering
-                </a>
-              </li>
-              <li>
-                <a href="#services" className="hover:text-green-400 transition-colors">
-                  Web3 + Blockchain Development
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="text-sm font-pixel text-cyan-400 mb-4">[ COMPANY ]</h3>
-            <ul className="space-y-2 text-sm text-zinc-400 font-mono">
-              <li>
-                <a href="#projects" className="hover:text-cyan-400 transition-colors">
-                  Products & Projects
-                </a>
-              </li>
-              <li>
-                <a href="#about" className="hover:text-cyan-400 transition-colors">
-                  About Glitch
-                </a>
-              </li>
-              <li>
-                <a href="#contact" className="hover:text-cyan-400 transition-colors">
-                  Contact
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="text-sm font-pixel text-yellow-400 mb-4">[ CONNECT ]</h3>
-            <div className="flex gap-4 mb-4">
-              <a
-                href="https://x.com/backend_glitch"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-zinc-400 hover:text-yellow-400 transition-colors border-2 border-zinc-700 p-2 hover:border-yellow-400"
-                aria-label="X"
-              >
-                <Twitter className="h-5 w-5" />
+    <footer className="bg-black border-t border-white/5 py-10">
+      <div className="container mx-auto px-6 md:px-8">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-5 mb-6">
+          <Link href="/" className="flex items-center gap-2.5" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
+            <Image src="/logo.png" alt="Glitch Inc" width={26} height={26} className="h-6 w-6" />
+            <span className="text-sm font-heading font-bold text-white">Glitch<span className="text-[#7C3AED]">.</span></span>
+          </Link>
+          <div className="flex items-center gap-2">
+            {socials.map((s) => (
+              <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer" aria-label={s.label} className="p-2 rounded-lg border border-white/5 text-[#A0A0A0] hover:text-[#7C3AED] hover:border-[#7C3AED]/20 transition-all">
+                <s.icon className="h-3.5 w-3.5" />
               </a>
-              <a
-                href="https://github.com/BackendGlitch"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-zinc-400 hover:text-yellow-400 transition-colors border-2 border-zinc-700 p-2 hover:border-yellow-400"
-                aria-label="GitHub"
-              >
-                <Github className="h-5 w-5" />
-              </a>
-              <a
-                href="https://www.linkedin.com/company/backendglitch"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-zinc-400 hover:text-yellow-400 transition-colors border-2 border-zinc-700 p-2 hover:border-yellow-400"
-                aria-label="LinkedIn"
-              >
-                <Linkedin className="h-5 w-5" />
-              </a>
-              <a
-                href="#contact"
-                className="text-zinc-400 hover:text-yellow-400 transition-colors border-2 border-zinc-700 p-2 hover:border-yellow-400"
-                aria-label="Email"
-              >
-                <Mail className="h-5 w-5" />
-              </a>
-            </div>
-            <p className="text-xs text-zinc-500 font-pixel">DEPLOYED: APP.BACKENDGLITCH.COM • WAITING FOR FUNDING</p>
+            ))}
           </div>
         </div>
-
-        <div className="border-t-4 border-zinc-800 pt-8 text-center">
-          <p className="text-sm text-zinc-500 font-pixel">&copy; {new Date().getFullYear()} GLITCH. BACKEND + WEB3 STARTUP.</p>
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-5 border-t border-white/5">
+          <p className="text-xs text-[#A0A0A0] font-mono inline-flex items-center gap-2">&copy; {new Date().getFullYear()} Glitch Inc. <TunisiaFlag className="w-4 h-2.5 rounded-sm" /> Built in Tunisia.</p>
+          <div className="flex items-center gap-3">
+            <a href="/PFE" className="text-xs text-[#A0A0A0] font-mono hover:text-[#7C3AED] transition-colors">PFE</a>
+            <span className="text-white/5">&middot;</span>
+            <p className="text-xs text-[#A0A0A0] font-mono">AI Agents &middot; Web3 &middot; Backend Systems</p>
+          </div>
         </div>
       </div>
     </footer>
   )
+}
+
+function TunisiaFlag({ className }: { className?: string }) {
+  return <svg viewBox="0 0 30 20" className={className} xmlns="http://www.w3.org/2000/svg"><rect width="30" height="20" fill="#E70013" /><circle cx="15" cy="10" r="5" fill="white" /><path d="M15 6.5 A4 4 0 0 0 12 10 A4 4 0 0 0 15 13.5 A3.5 3.5 0 0 1 13 10 A3.5 3.5 0 0 1 15 6.5Z" fill="#E70013" /><polygon points="16.5,7.5 15.5,8 15,7 14.5,8 13.5,7.5 14,8.5 13,9 14,9.5 13.5,10.5 14.5,10 15,11 15.5,10 16.5,10.5 16,9.5 17,9 16,8.5" fill="#E70013" /></svg>
 }

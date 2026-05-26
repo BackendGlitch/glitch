@@ -1,199 +1,42 @@
 "use client"
 
 import { useState } from "react"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Loader2, Mail, MapPin, Send } from "lucide-react"
+import { motion } from "framer-motion"
+import { Send, Loader2, Mail } from "lucide-react"
 
 export default function Contact() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    message: "",
-  })
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submitStatus, setSubmitStatus] = useState<{
-    type: "success" | "error" | null
-    message: string
-  }>({ type: null, message: "" })
+  const [form, setForm] = useState({ name: "", email: "", message: "" })
+  const [submitting, setSubmitting] = useState(false)
+  const [status, setStatus] = useState<{ type: "success" | "error" | null; message: string }>({ type: null, message: "" })
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
-    setSubmitStatus({ type: null, message: "" })
-
-    try {
-      const response = await fetch("/api/contact", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      })
-
-      const data = await response.json()
-
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to send message")
-      }
-
-      setSubmitStatus({
-        type: "success",
-        message: "Thanks for reaching out. We will reply shortly.",
-      })
-      setFormData({ name: "", email: "", message: "" })
-
-      setTimeout(() => {
-        setSubmitStatus({ type: null, message: "" })
-      }, 5000)
-    } catch (error) {
-      setSubmitStatus({
-        type: "error",
-        message: error instanceof Error ? error.message : "Failed to send message. Please try again later.",
-      })
-    } finally {
-      setIsSubmitting(false)
-    }
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault(); setSubmitting(true); setStatus({ type: null, message: "" })
+    try { const r = await fetch("/api/contact", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(form) }); const d = await r.json(); if (!r.ok) throw new Error(d.error || "Failed"); setStatus({ type: "success", message: "Thanks! We'll reply shortly." }); setForm({ name: "", email: "", message: "" }); setTimeout(() => setStatus({ type: null, message: "" }), 5000) }
+    catch (err) { setStatus({ type: "error", message: err instanceof Error ? err.message : "Failed." }) }
+    finally { setSubmitting(false) }
   }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    })
-
-    if (submitStatus.type) {
-      setSubmitStatus({ type: null, message: "" })
-    }
-  }
+  const cls = "w-full px-4 py-3 bg-black border border-white/10 rounded-lg text-white placeholder:text-[#A0A0A0] focus:border-[#7C3AED] focus:outline-none focus:ring-1 focus:ring-[#7C3AED]/30 transition-all text-sm"
 
   return (
-    <section id="contact" className="py-24 bg-gradient-to-b from-zinc-950 to-pink-950/20 border-t-4 border-pink-400">
-      <div className="container mx-auto px-4 md:px-8">
-        <div className="mb-12 text-center px-4">
-          <div className="inline-block mb-6 px-4 sm:px-6 py-3 bg-pink-400/20 border-4 border-pink-400 pixel-text text-pink-400 text-xs">
-            [ CONTACT ]
-          </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-pixel text-white mb-4 tracking-wider break-words px-2">
-            LET US TALK
-          </h2>
-          <p className="text-base sm:text-lg md:text-xl text-zinc-300 max-w-2xl mx-auto font-mono px-2">
-            Reach out for backend or Web3 execution, partnerships, or funding conversations for Backend Glitch.
-          </p>
-        </div>
+    <section id="contact" className="py-24 md:py-32 bg-black">
+      <div className="container mx-auto px-6 md:px-8 max-w-3xl">
+        <p className="text-xs font-mono tracking-[0.2em] uppercase text-[#A0A0A0] mb-3 text-center">Contact</p>
+        <h2 className="text-3xl md:text-5xl font-heading font-bold text-white mb-3 text-center">Let&apos;s Talk</h2>
+        <p className="text-sm text-[#A0A0A0] max-w-md mx-auto text-center mb-16">We take on select projects. If you&apos;re building in AI, Web3, or backend infrastructure — reach out.</p>
 
-        <div className="grid grid-cols-1 gap-12 md:grid-cols-2 max-w-5xl mx-auto">
-          <div>
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
-                <label htmlFor="name" className="block text-sm font-pixel text-zinc-300 mb-2">
-                  [ NAME ]
-                </label>
-                <Input
-                  id="name"
-                  name="name"
-                  type="text"
-                  required
-                  value={formData.name}
-                  onChange={handleChange}
-                  placeholder="Your name"
-                  disabled={isSubmitting}
-                  className="bg-zinc-900 border-4 border-zinc-700 text-zinc-100 placeholder:text-zinc-500 focus:border-pink-400 font-mono disabled:opacity-50 disabled:cursor-not-allowed"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="email" className="block text-sm font-pixel text-zinc-300 mb-2">
-                  [ EMAIL ]
-                </label>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  required
-                  value={formData.email}
-                  onChange={handleChange}
-                  placeholder="you@company.com"
-                  disabled={isSubmitting}
-                  className="bg-zinc-900 border-4 border-zinc-700 text-zinc-100 placeholder:text-zinc-500 focus:border-pink-400 font-mono disabled:opacity-50 disabled:cursor-not-allowed"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="message" className="block text-sm font-pixel text-zinc-300 mb-2">
-                  [ MESSAGE ]
-                </label>
-                <Textarea
-                  id="message"
-                  name="message"
-                  required
-                  value={formData.message}
-                  onChange={handleChange}
-                  placeholder="Tell us about your project, partnership, or funding discussion..."
-                  rows={6}
-                  disabled={isSubmitting}
-                  className="bg-zinc-900 border-4 border-zinc-700 text-zinc-100 placeholder:text-zinc-500 focus:border-pink-400 font-mono disabled:opacity-50 disabled:cursor-not-allowed"
-                />
-              </div>
-
-              {submitStatus.type && (
-                <div
-                  className={`p-4 border-4 ${
-                    submitStatus.type === "success"
-                      ? "border-green-400 bg-green-400/10 text-green-400"
-                      : "border-red-400 bg-red-400/10 text-red-400"
-                  } font-pixel text-sm`}
-                >
-                  {submitStatus.message}
-                </div>
-              )}
-
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full pixel-button bg-pink-400 text-zinc-950 border-pink-400 px-8 py-4 text-sm font-pixel disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-              >
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    [ SENDING... ]
-                  </>
-                ) : (
-                  <>
-                    <Send className="h-4 w-4" />
-                    [ SEND MESSAGE ]
-                  </>
-                )}
-              </button>
-            </form>
-          </div>
-
-          <div className="flex flex-col justify-center space-y-6">
-            <div className="pixel-card border-cyan-400 bg-cyan-400/10 p-6">
-              <div className="mb-4 flex items-center gap-3 text-cyan-400">
-                <MapPin className="h-6 w-6" />
-                <h3 className="text-lg font-pixel text-cyan-400">[ LOCATION ]</h3>
-              </div>
-              <p className="text-zinc-300 text-lg font-mono mb-2">Tunisia</p>
-              <p className="text-sm text-zinc-500 font-mono">Remote and on-site collaboration available.</p>
-            </div>
-
-            <div className="pixel-card border-yellow-400 bg-yellow-400/10 p-6">
-              <div className="mb-4 flex items-center gap-3 text-yellow-400">
-                <Mail className="h-6 w-6" />
-                <h3 className="text-lg font-pixel text-yellow-400">[ EMAIL ]</h3>
-              </div>
-              <p className="text-zinc-300 font-mono">contact@backendglitch.com</p>
-            </div>
-
-            <div className="pixel-card border-purple-400 bg-gradient-to-br from-purple-400/10 to-pink-400/10 p-6">
-              <h3 className="text-lg font-pixel text-purple-400 mb-2">[ FUNDING NOTE ]</h3>
-              <p className="text-zinc-300 text-sm font-mono">
-                Backend Glitch is waiting for funding and operating money to run fully. We are open to investor and strategic
-                partner discussions.
-              </p>
-            </div>
-          </div>
+        <div className="grid md:grid-cols-5 gap-10 max-w-2xl mx-auto">
+          <motion.form initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} onSubmit={submit} className="md:col-span-3 space-y-4">
+            <div><label className="block text-xs font-mono text-[#A0A0A0] mb-2 uppercase tracking-wider">Name</label><input type="text" required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Your name" disabled={submitting} className={cls} /></div>
+            <div><label className="block text-xs font-mono text-[#A0A0A0] mb-2 uppercase tracking-wider">Email</label><input type="email" required value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="you@company.com" disabled={submitting} className={cls} /></div>
+            <div><label className="block text-xs font-mono text-[#A0A0A0] mb-2 uppercase tracking-wider">Message</label><textarea required value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} placeholder="Tell us about your project..." rows={4} disabled={submitting} className={cls + " resize-none"} /></div>
+            {status.type && <div className={`p-3 rounded-lg text-sm ${status.type === "success" ? "bg-green-900/20 border border-green-500/20 text-green-400" : "bg-red-900/20 border border-red-500/20 text-red-400"}`}>{status.message}</div>}
+            <button type="submit" disabled={submitting} className="w-full px-6 py-3 text-sm font-semibold bg-[#7C3AED] text-white rounded-lg hover:bg-[#6D28D9] transition-all disabled:opacity-50 flex items-center justify-center gap-2">{submitting ? <><Loader2 className="h-4 w-4 animate-spin" /> Sending...</> : <><Send className="h-4 w-4" /> Send Message</>}</button>
+          </motion.form>
+          <motion.div initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }} className="md:col-span-2 flex flex-col justify-center gap-5">
+            <div className="p-5 rounded-xl bg-white/[0.02] border border-white/5"><div className="flex items-center gap-2 text-[#7C3AED] mb-2"><Mail className="h-4 w-4" /><span className="font-heading font-semibold text-sm">Email</span></div><p className="text-sm text-[#A0A0A0] font-mono">contact@backendglitch.com</p></div>
+            <div className="p-5 rounded-xl bg-white/[0.02] border border-white/5"><p className="text-sm text-[#A0A0A0] leading-relaxed">We respond within 24 hours. Investor, founder, or engineer — if the work is serious, we&apos;re interested.</p></div>
+          </motion.div>
         </div>
       </div>
     </section>

@@ -1,21 +1,24 @@
 import type { Metadata } from "next"
-import { IBM_Plex_Mono, Press_Start_2P, Space_Grotesk } from "next/font/google"
+import { Space_Grotesk, JetBrains_Mono, Press_Start_2P } from "next/font/google"
 import "./globals.css"
+import { LoadingProvider } from "@/components/LoadingScreen"
 
 const headingFont = Space_Grotesk({
   variable: "--font-heading",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
 })
 
 const bodyFont = Space_Grotesk({
   variable: "--font-body",
   subsets: ["latin"],
+  weight: ["300", "400", "500"],
 })
 
-const monoFont = IBM_Plex_Mono({
+const monoFont = JetBrains_Mono({
   variable: "--font-mono",
-  weight: ["400", "500"],
   subsets: ["latin"],
+  weight: ["400", "500"],
 })
 
 const pixelFont = Press_Start_2P({
@@ -25,9 +28,13 @@ const pixelFont = Press_Start_2P({
 })
 
 export const metadata: Metadata = {
-  title: "Glitch | Backend Infrastructure and Web3 Engineering",
+  title: "Glitch Inc — Backend Infrastructure & AI",
   description:
-    "Glitch is a Tunisia-based startup focused on backend infrastructure and Web3/blockchain development. Backend Glitch is our flagship product, currently waiting for funding to operate at scale.",
+    "Glitch Inc is a Tunisia-based tech startup building backend infrastructure, AI agents, and Web3 systems.",
+  icons: {
+    icon: "/logo.png",
+    apple: "/logo.png",
+  },
 }
 
 export default function RootLayout({
@@ -38,7 +45,9 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${headingFont.variable} ${bodyFont.variable} ${monoFont.variable} ${pixelFont.variable} antialiased`}>
-        {children}
+        <LoadingProvider>
+          {children}
+        </LoadingProvider>
       </body>
     </html>
   )
