@@ -2,6 +2,7 @@ import Navbar from "@/components/sections/Navbar"
 import Hero from "@/components/sections/Hero"
 import Services from "@/components/sections/Services"
 import Products from "@/components/sections/Products"
+import GraduateSpotlight from "@/components/sections/GraduateSpotlight"
 import HowWeWork from "@/components/sections/HowWeWork"
 import TechStack from "@/components/sections/TechStack"
 import About from "@/components/sections/About"
@@ -15,6 +16,7 @@ export default function Home() {
       <Hero />
       <Services />
       <Products />
+      <GraduateSpotlight />
       <HowWeWork />
       <TechStack />
       <About />

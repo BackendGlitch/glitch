@@ -148,6 +148,11 @@ function ProductCard({ product, onClick }: { product: typeof products[0]; onClic
                 <span key={h.text} className="text-[10px] font-mono px-2 py-1 rounded bg-[#7C3AED]/5 border border-[#7C3AED]/10 text-[#7C3AED]">{h.text.slice(0, 40)}...</span>
               ))}
             </div>
+            {product.id === "fabrix" && (
+              <p className="text-[10px] font-mono text-[#A0A0A0]/60 mb-2">
+                Built by <span className="text-[#A0A0A0]/80">Ayhem Belhassen</span> · PFE 2026
+              </p>
+            )}
           </div>
           <span className="inline-flex items-center gap-1.5 text-xs font-medium text-[#7C3AED] group-hover:text-white transition-colors">
             View Details <ArrowRight className="h-3 w-3 group-hover:translate-x-0.5 transition-transform" />
@@ -322,6 +327,14 @@ function FabrixDialog({ open, onClose }: { open: boolean; onClose: () => void })
             </div>
           </div>
           <ul className="space-y-2">{p.highlights.map((h) => <li key={h.text} className="flex items-start gap-2 text-sm text-[#A0A0A0]"><h.icon className="h-4 w-4 text-[#7C3AED] mt-0.5 flex-shrink-0" />{h.text}</li>)}</ul>
+          <div className="flex flex-wrap gap-3 pt-2">
+            <a href="https://fabrix.sbs" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium bg-[#F59E0B] text-black rounded-lg hover:bg-[#F59E0B]/90 transition-all">
+              Live Preview <ExternalLink className="h-3 w-3" />
+            </a>
+            <a href="https://github.com/ACPIdark" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium border border-white/10 text-white rounded-lg hover:border-[#7C3AED]/30 transition-all">
+              Built by Ayhem Belhassen <ExternalLink className="h-3 w-3" />
+            </a>
+          </div>
         </div>
       </DialogContent>
     </Dialog>

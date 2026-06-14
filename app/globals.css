@@ -277,3 +277,217 @@ body {
   filter: brightness(0) saturate(100%) invert(12%) sepia(49%) saturate(1873%) hue-rotate(243deg) brightness(92%) contrast(93%);
   opacity: 0.5;
 }
+
+/* ============================================
+   GRADUATE GLITCH CARD
+   ============================================ */
+
+/* Card container — periodic full-card glitch */
+@keyframes card-glitch {
+  0%, 94%, 100% { transform: translate(0); }
+  94.5% { transform: translate(-3px, 1px); }
+  95% { transform: translate(3px, -1px); }
+  95.5% { transform: translate(-2px, -1px); }
+  96% { transform: translate(2px, 1px); }
+  96.5% { transform: translate(0); }
+}
+
+.glitch-card {
+  animation: card-glitch 6s ease-in-out infinite;
+}
+
+/* RGB split layers for photo */
+.glitch-photo-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.glitch-photo-container::before,
+.glitch-photo-container::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 5;
+  mix-blend-mode: screen;
+}
+
+.glitch-photo-container::before {
+  background: rgba(0, 255, 255, 0.35);
+  animation: glitch-rgb-cyan 4.8s ease-in-out infinite;
+}
+
+.glitch-photo-container::after {
+  background: rgba(255, 0, 255, 0.35);
+  animation: glitch-rgb-magenta 4.8s ease-in-out infinite;
+  animation-delay: 0.06s;
+}
+
+@keyframes glitch-rgb-cyan {
+  0%, 91%, 100% {
+    opacity: 0;
+    transform: translateX(0);
+    clip-path: inset(0 0 100% 0);
+  }
+  91.5% {
+    opacity: 0.6;
+    transform: translateX(-5px);
+    clip-path: inset(5% 0 90% 0);
+  }
+  92.5% {
+    opacity: 0.5;
+    transform: translateX(3px);
+    clip-path: inset(35% 0 45% 0);
+  }
+  93.5% {
+    opacity: 0.7;
+    transform: translateX(-4px);
+    clip-path: inset(65% 0 15% 0);
+  }
+  94.5% {
+    opacity: 0.4;
+    transform: translateX(5px);
+    clip-path: inset(15% 0 70% 0);
+  }
+  95.5% {
+    opacity: 0;
+    transform: translateX(0);
+    clip-path: inset(0 0 100% 0);
+  }
+}
+
+@keyframes glitch-rgb-magenta {
+  0%, 91%, 100% {
+    opacity: 0;
+    transform: translateX(0);
+    clip-path: inset(0 0 100% 0);
+  }
+  91.5% {
+    opacity: 0.6;
+    transform: translateX(5px);
+    clip-path: inset(10% 0 75% 0);
+  }
+  92.5% {
+    opacity: 0.5;
+    transform: translateX(-3px);
+    clip-path: inset(50% 0 30% 0);
+  }
+  93.5% {
+    opacity: 0.7;
+    transform: translateX(4px);
+    clip-path: inset(25% 0 55% 0);
+  }
+  94.5% {
+    opacity: 0.4;
+    transform: translateX(-5px);
+    clip-path: inset(70% 0 10% 0);
+  }
+  95.5% {
+    opacity: 0;
+    transform: translateX(0);
+    clip-path: inset(0 0 100% 0);
+  }
+}
+
+/* Scanlines overlay */
+.scanlines {
+  position: relative;
+}
+
+.scanlines::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.08) 2px,
+    rgba(0, 0, 0, 0.08) 4px
+  );
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Glitch text distortion */
+@keyframes glitch-text {
+  0%, 92%, 100% {
+    text-shadow: none;
+    transform: translate(0);
+  }
+  92.5% {
+    text-shadow:
+      2px 0 0 rgba(0, 255, 255, 0.7),
+      -2px 0 0 rgba(255, 0, 255, 0.7);
+    transform: translate(-2px, 0);
+  }
+  93.5% {
+    text-shadow:
+      -3px 1px 0 rgba(0, 255, 255, 0.6),
+      3px -1px 0 rgba(255, 0, 255, 0.6);
+    transform: translate(3px, -1px);
+  }
+  94.5% {
+    text-shadow:
+      1px -1px 0 rgba(0, 255, 255, 0.5),
+      -1px 1px 0 rgba(255, 0, 255, 0.5);
+    transform: translate(-1px, 1px);
+  }
+  95.5% {
+    text-shadow: none;
+    transform: translate(0);
+  }
+}
+
+.glitch-text {
+  animation: glitch-text 5s ease-in-out infinite;
+}
+
+/* Glitch border flicker */
+@keyframes glitch-border {
+  0%, 93%, 100% {
+    border-color: rgba(124, 58, 237, 0.2);
+    box-shadow: 0 0 20px rgba(124, 58, 237, 0.05);
+  }
+  93.5% {
+    border-color: rgba(0, 255, 255, 0.4);
+    box-shadow: -3px 0 0 rgba(0, 255, 255, 0.15), 0 0 30px rgba(124, 58, 237, 0.1);
+  }
+  94.5% {
+    border-color: rgba(255, 0, 255, 0.4);
+    box-shadow: 3px 0 0 rgba(255, 0, 255, 0.15), 0 0 30px rgba(124, 58, 237, 0.1);
+  }
+  95.5% {
+    border-color: rgba(124, 58, 237, 0.2);
+    box-shadow: 0 0 20px rgba(124, 58, 237, 0.05);
+  }
+}
+
+.glitch-border {
+  animation: glitch-border 5.5s ease-in-out infinite;
+}
+
+/* VHS tracking line */
+@keyframes tracking-line {
+  0% { top: -2%; }
+  100% { top: 102%; }
+}
+
+.glitch-tracking-line {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(124, 58, 237, 0.3) 20%,
+    rgba(0, 255, 255, 0.2) 50%,
+    rgba(124, 58, 237, 0.3) 80%,
+    transparent 100%
+  );
+  animation: tracking-line 4s linear infinite;
+  z-index: 15;
+  pointer-events: none;
+}
