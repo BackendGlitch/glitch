@@ -17,17 +17,17 @@ export async function generateMetadata({
   if (!grad) return { title: "Not Found" }
 
   return {
-    title: `${grad.name} — ${grad.title}`,
+    title: `${grad.name} - ${grad.title}`,
     description: `${grad.name} built the full ${grad.project} platform at Glitch Inc as his PFE graduation project. Class of ${grad.class}.`,
     openGraph: {
-      title: `${grad.name} — ${grad.title}`,
-      description: `${grad.name} built ${grad.project} at Glitch Inc — full-stack: frontend, backend, and printer agent. Class of ${grad.class}.`,
+      title: `${grad.name} - ${grad.title}`,
+      description: `${grad.name} built ${grad.project} at Glitch Inc - full-stack: frontend, backend, and printer agent. Class of ${grad.class}.`,
       images: [grad.photo],
       type: "profile",
     },
     twitter: {
       card: "summary_large_image",
-      title: `${grad.name} — ${grad.title}`,
+      title: `${grad.name} - ${grad.title}`,
       description: `${grad.name} built ${grad.project} at Glitch Inc. Class of ${grad.class}.`,
       images: [grad.photo],
     },

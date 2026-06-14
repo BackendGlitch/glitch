@@ -14,7 +14,7 @@ export default function GraduateShareButtons({
 }) {
   const [copied, setCopied] = useState(false)
 
-  const shareText = `${name} — ${title} at Glitch Inc 🎓`
+  const shareText = `${name} - ${title} at Glitch Inc 🎓`
   const encodedUrl = encodeURIComponent(url)
   const encodedText = encodeURIComponent(shareText)
 
@@ -31,7 +31,7 @@ export default function GraduateShareButtons({
           url,
         })
       } catch {
-        // User cancelled — no-op
+        // User cancelled - no-op
       }
     }
   }
@@ -83,7 +83,7 @@ export default function GraduateShareButtons({
           LinkedIn
         </a>
 
-        {/* Instagram — Ducky Prints */}
+        {/* Instagram - Ducky Prints */}
         <a
           href="https://www.instagram.com/duckyprints.o_o/"
           target="_blank"
