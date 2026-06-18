@@ -26,10 +26,14 @@ export default async function TestPage({ params }: { params: Promise<{ slug?: st
   const { slug } = await params;
   const route = slug?.join("/") || "";
 
-  // Dynamically import agent pages
+  // Dynamically import agent pages — sanitized to prevent path traversal
   if (route) {
+    const safe = route.replace(/[^a-zA-Z0-9\-_\/]/g, "").replace(/\.\./g, "");
+    if (safe !== route || route.includes("..")) {
+      return (<div style={{padding:40,fontFamily:"system-ui"}}><h1>400</h1><p>Invalid path</p></div>);
+    }
     try {
-      const mod = await import(`@/app/test/agent-pages/${route}/page`);
+      const mod = await import(`@/app/test/agent-pages/${safe}/page`);
       const Component = mod.default;
       return <Component />;
     } catch (e) {
